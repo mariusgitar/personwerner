@@ -8,8 +8,18 @@ import './index.css'
 const ACTIONS = {
   mark: 'mark',
   remove: 'remove',
-  placeholder: 'placeholder'
+  placeholder: 'placeholder',
+  pseudonymize: 'pseudonymize'
 }
+
+const SENSITIVITY_LEVELS = [
+  { label: 'Søk blant de 100 vanligste navnene', threshold: 700 },
+  { label: 'Søk blant de 300 vanligste navnene', threshold: 500 },
+  { label: 'Søk blant de 500 vanligste navnene', threshold: 300 },
+  { label: 'Søk blant alle kjente navn', threshold: 100 }
+]
+
+const DEFAULT_SENSITIVITY = 500
 
 const MONTHS = [
   'januar',
@@ -35,9 +45,8 @@ const PLACEHOLDERS = {
   name: '[NAVN]'
 }
 
-const CERTAIN_NAMES = new Set(namesData.certain.map((name) => name.toLowerCase()))
-const AMBIGUOUS_NAMES = new Set(namesData.ambiguous.map((name) => name.toLowerCase()))
-const LAST_NAMES = new Set(namesData.lastNames.map((name) => name.toLowerCase()))
+const AMBIGUOUS_NAMES = new Set(namesData.ambiguous.map((entry) => entry.name.toLowerCase()))
+const LAST_NAMES = new Set(namesData.lastNames.map((entry) => entry.name.toLowerCase()))
 
 const defaultAction = ACTIONS.placeholder
 
@@ -50,8 +59,8 @@ const LABELS = {
   name: 'Navn'
 }
 
-function createMatch(start, end, value, piiType, confidence = 'high') {
-  return { start, end, value, piiType, confidence }
+function createMatch(start, end, value, piiType, confidence = 'high', meta = {}) {
+  return { start, end, value, piiType, confidence, ...meta }
 }
 
 function hasValidDatePrefix(raw) {
@@ -109,7 +118,7 @@ function detectRegexPII(text) {
   return matches
 }
 
-function detectNamePII(text) {
+function detectNamePII(text, certainNames) {
   const wordRegex = /\b[\p{L}][\p{L}'-]*\b/gu
   const tokens = []
   let found
@@ -122,11 +131,11 @@ function detectNamePII(text) {
   const firstNameTokenIndexes = new Set()
 
   tokens.forEach((token, index) => {
-    if (CERTAIN_NAMES.has(token.lower)) {
-      matches.push(createMatch(token.start, token.end, token.value, 'name', 'high'))
+    if (certainNames.has(token.lower)) {
+      matches.push(createMatch(token.start, token.end, token.value, 'name', 'high', { nameRole: 'first' }))
       firstNameTokenIndexes.add(index)
     } else if (AMBIGUOUS_NAMES.has(token.lower)) {
-      matches.push(createMatch(token.start, token.end, token.value, 'name', 'ambiguous'))
+      matches.push(createMatch(token.start, token.end, token.value, 'name', 'ambiguous', { nameRole: 'first' }))
       firstNameTokenIndexes.add(index)
     }
   })
@@ -136,7 +145,7 @@ function detectNamePII(text) {
     const prevIsFirstName = firstNameTokenIndexes.has(index - 1)
     const nextIsFirstName = firstNameTokenIndexes.has(index + 1)
     if (prevIsFirstName || nextIsFirstName) {
-      matches.push(createMatch(token.start, token.end, token.value, 'name', 'high'))
+      matches.push(createMatch(token.start, token.end, token.value, 'name', 'high', { nameRole: 'last' }))
     }
   })
 
@@ -161,8 +170,8 @@ function dedupeMatches(matches) {
   return accepted
 }
 
-function detectPII(text) {
-  return dedupeMatches([...detectRegexPII(text), ...detectNamePII(text)])
+function detectPII(text, certainNames) {
+  return dedupeMatches([...detectRegexPII(text), ...detectNamePII(text, certainNames)])
 }
 
 function renderHighlightedText(text, matches) {
@@ -198,9 +207,68 @@ function renderHighlightedText(text, matches) {
   return chunks
 }
 
+function pseudonymizeText(text, matches) {
+  const personMap = new Map()
+  const legend = []
+
+  const getPseudonym = (firstName) => {
+    const key = firstName.toLowerCase()
+    if (!personMap.has(key)) {
+      const pseudonym = `Person ${personMap.size + 1}`
+      personMap.set(key, { pseudonym, firstSeen: firstName })
+      legend.push({ pseudonym, original: firstName })
+    }
+
+    return personMap.get(key).pseudonym
+  }
+
+  let output = ''
+  let cursor = 0
+
+  for (let index = 0; index < matches.length; index += 1) {
+    const match = matches[index]
+    output += text.slice(cursor, match.start)
+
+    if (match.piiType !== 'name') {
+      output += PLACEHOLDERS[match.piiType]
+      cursor = match.end
+      continue
+    }
+
+    if (match.nameRole !== 'first') {
+      output += PLACEHOLDERS.name
+      cursor = match.end
+      continue
+    }
+
+    const pseudonym = getPseudonym(match.value)
+    const nextMatch = matches[index + 1]
+    const hasFollowingLastName =
+      nextMatch &&
+      nextMatch.piiType === 'name' &&
+      nextMatch.nameRole === 'last' &&
+      text.slice(match.end, nextMatch.start).trim() === ''
+
+    output += pseudonym
+    cursor = hasFollowingLastName ? nextMatch.end : match.end
+
+    if (hasFollowingLastName) {
+      index += 1
+    }
+  }
+
+  output += text.slice(cursor)
+
+  return { text: output, legend }
+}
+
 function transformText(text, matches, action) {
-  if (!text) return ''
-  if (!matches.length) return text
+  if (!text) return { text: '', legend: [] }
+  if (!matches.length) return { text, legend: [] }
+
+  if (action === ACTIONS.pseudonymize) {
+    return pseudonymizeText(text, matches)
+  }
 
   let output = ''
   let cursor = 0
@@ -217,7 +285,7 @@ function transformText(text, matches, action) {
   })
 
   output += text.slice(cursor)
-  return output
+  return { text: output, legend: [] }
 }
 
 function downloadBlob(content, filename, mimeType) {
@@ -236,9 +304,15 @@ function App() {
   const [inputText, setInputText] = useState('')
   const [loading, setLoading] = useState(false)
   const [globalAction, setGlobalAction] = useState(defaultAction)
+  const [nameSensitivity, setNameSensitivity] = useState(DEFAULT_SENSITIVITY)
   const [ignoredYellow, setIgnoredYellow] = useState(new Set())
 
-  const allMatches = useMemo(() => detectPII(inputText), [inputText])
+  const certainNames = useMemo(
+    () => new Set(namesData.certain.filter((entry) => entry.score >= nameSensitivity).map((entry) => entry.name.toLowerCase())),
+    [nameSensitivity]
+  )
+
+  const allMatches = useMemo(() => detectPII(inputText, certainNames), [inputText, certainNames])
 
   const filteredMatches = useMemo(
     () => allMatches.filter((match) => !(match.confidence === 'ambiguous' && ignoredYellow.has(match.value.toLowerCase()))),
@@ -261,7 +335,7 @@ function App() {
     return [...bucket.values()]
   }, [allMatches, ignoredYellow])
 
-  const transformedText = useMemo(
+  const transformedResult = useMemo(
     () => transformText(inputText, filteredMatches, globalAction),
     [inputText, filteredMatches, globalAction]
   )
@@ -318,6 +392,21 @@ function App() {
             className="h-40 w-full rounded-lg border border-slate-300 p-3 font-mono text-sm"
           />
           {loading && <p className="mt-2 text-sm font-medium text-blue-700">Werner jobber...</p>}
+
+          <label className="mt-4 flex flex-col gap-1 text-sm">
+            <span className="font-medium text-slate-700">Sensitivitet – hvor mange navn skal Werner lete etter?</span>
+            <select
+              value={nameSensitivity}
+              onChange={(event) => setNameSensitivity(Number.parseInt(event.target.value, 10))}
+              className="rounded border border-slate-300 p-2"
+            >
+              {SENSITIVITY_LEVELS.map((level) => (
+                <option key={level.threshold} value={level.threshold}>
+                  {level.label}
+                </option>
+              ))}
+            </select>
+          </label>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-3">
@@ -389,6 +478,7 @@ function App() {
                 <option value={ACTIONS.mark}>Marker</option>
                 <option value={ACTIONS.remove}>Fjern</option>
                 <option value={ACTIONS.placeholder}>Erstatt med plassholder</option>
+                <option value={ACTIONS.pseudonymize}>Pseudonymiser</option>
               </select>
             </label>
           </div>
@@ -400,14 +490,23 @@ function App() {
           <div className="mt-4">
             <h3 className="font-semibold">Resultat</h3>
             <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words text-sm">
-              {transformedText || 'Ingen tekst å vise enda.'}
+              {transformedResult.text || 'Ingen tekst å vise enda.'}
             </pre>
+
+            {globalAction === ACTIONS.pseudonymize && transformedResult.legend.length > 0 && (
+              <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
+                <p className="font-medium">Forklaring</p>
+                <p className="mt-1 text-slate-700">
+                  {transformedResult.legend.map((item) => `${item.pseudonym} = ${item.original}`).join(', ')}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
             <button
               type="button"
-              onClick={() => downloadBlob(transformedText, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')}
+              onClick={() => downloadBlob(transformedResult.text, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')}
               className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
             >
               Last ned TXT
@@ -415,7 +514,7 @@ function App() {
             <button
               type="button"
               onClick={() => {
-                const csv = Papa.unparse([{ resultat: transformedText }])
+                const csv = Papa.unparse([{ resultat: transformedResult.text }])
                 downloadBlob(csv, 'personwerner-resultat.csv', 'text/csv;charset=utf-8')
               }}
               className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
