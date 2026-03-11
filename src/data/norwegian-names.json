@@ -1,0 +1,14 @@
+{
+  "certain": [
+    "Ola", "Kari", "Per", "Anne", "Ingrid", "Lars", "Nora", "Henrik", "Maja", "Sofie",
+    "Emil", "Magnus", "Elias", "Jonas", "Mathilde", "Kristin", "Maria", "Håkon", "Sindre", "Ane",
+    "Martine", "Even", "Camilla", "Tobias", "Ida", "Andreas", "Silje", "Morten", "Kristoffer", "Thea"
+  ],
+  "ambiguous": [
+    "Bjørn", "Dag", "Tor", "Rose", "Mai", "Liv", "Odd", "Line", "Stine", "Juni"
+  ],
+  "lastNames": [
+    "Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Nilsen", "Pedersen", "Kristiansen", "Jensen", "Karlsen",
+    "Johnsen", "Pettersen", "Eriksen", "Berg", "Haugen", "Hagen", "Johannessen", "Andreassen", "Jacobsen", "Dahl"
+  ]
+}
