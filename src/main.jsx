@@ -36,6 +36,44 @@ const MONTHS = [
   'desember'
 ]
 
+const NON_NAME_CAPITALIZED_WORDS = new Set([
+  'norge',
+  'norwegian',
+  'oslo',
+  'bergen',
+  'trondheim',
+  'stavanger',
+  'tønsberg',
+  'kristiansand',
+  'tromsø',
+  'drammen',
+  'fredrikstad',
+  'januar',
+  'februar',
+  'mars',
+  'april',
+  'mai',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'desember',
+  'mandag',
+  'tirsdag',
+  'onsdag',
+  'torsdag',
+  'fredag',
+  'lørdag',
+  'søndag',
+  'kommune',
+  'fylke',
+  'stat',
+  'regjeringen',
+  'stortinget'
+])
+
 const PLACEHOLDERS = {
   fnr: '[FØDSELSNUMMER]',
   dnr: '[D-NUMMER]',
@@ -164,11 +202,78 @@ function detectNamePII(text, certainNames) {
   return matches
 }
 
+function isCapitalizedWord(token) {
+  return /^[\p{Lu}][\p{L}'-]{1,}$/u.test(token.value)
+}
+
+function isSentenceStartToken(text, tokenStart) {
+  for (let index = tokenStart - 1; index >= 0; index -= 1) {
+    const char = text[index]
+    if (/\s/u.test(char)) continue
+    return char === '.' || char === '!' || char === '?'
+  }
+
+  return false
+}
+
+function detectCapitalizedPairPII(text, certainNames) {
+  const wordRegex = /\b[\p{L}][\p{L}'-]*\b/gu
+  const tokens = []
+  let found
+
+  while ((found = wordRegex.exec(text)) !== null) {
+    tokens.push({ value: found[0], lower: found[0].toLowerCase(), start: found.index, end: found.index + found[0].length })
+  }
+
+  const matches = []
+  let index = 0
+
+  while (index < tokens.length) {
+    if (!isCapitalizedWord(tokens[index]) || NON_NAME_CAPITALIZED_WORDS.has(tokens[index].lower)) {
+      index += 1
+      continue
+    }
+
+    let endIndex = index
+    while (endIndex + 1 < tokens.length) {
+      const nextToken = tokens[endIndex + 1]
+      if (!isCapitalizedWord(nextToken) || NON_NAME_CAPITALIZED_WORDS.has(nextToken.lower)) break
+      if (text.slice(tokens[endIndex].end, nextToken.start).trim() !== '') break
+      endIndex += 1
+    }
+
+    const runLength = endIndex - index + 1
+    if (runLength >= 2 && !isSentenceStartToken(text, tokens[index].start)) {
+      const runTokens = tokens.slice(index, endIndex + 1)
+      const confidence = runTokens.some((token) => certainNames.has(token.lower) || AMBIGUOUS_NAMES.has(token.lower))
+        ? 'high'
+        : 'ambiguous'
+      const reviewLabel = confidence === 'ambiguous' ? 'Mulig navn (ukjent)' : undefined
+
+      matches.push(
+        createMatch(tokens[index].start, tokens[endIndex].end, text.slice(tokens[index].start, tokens[endIndex].end), 'name', confidence, {
+          nameRole: 'first',
+          reviewLabel
+        })
+      )
+    }
+
+    index = endIndex + 1
+  }
+
+  return matches
+}
+
 function dedupeMatches(matches) {
   const sorted = [...matches].sort((a, b) => {
     if (a.start !== b.start) return a.start - b.start
+
     const confidenceRank = { high: 0, ambiguous: 1 }
-    return confidenceRank[a.confidence] - confidenceRank[b.confidence]
+    if (confidenceRank[a.confidence] !== confidenceRank[b.confidence]) {
+      return confidenceRank[a.confidence] - confidenceRank[b.confidence]
+    }
+
+    return b.end - a.end
   })
 
   const accepted = []
@@ -183,7 +288,10 @@ function dedupeMatches(matches) {
 }
 
 function detectPII(text, certainNames) {
-  return dedupeMatches([...detectRegexPII(text), ...detectNamePII(text, certainNames)])
+  const regexMatches = detectRegexPII(text)
+  const nameMatches = detectNamePII(text, certainNames)
+  const capitalizedPairMatches = detectCapitalizedPairPII(text, certainNames)
+  return dedupeMatches([...regexMatches, ...nameMatches, ...capitalizedPairMatches])
 }
 
 function renderHighlightedText(text, matches) {
@@ -350,6 +458,7 @@ function App() {
         const key = match.value.toLowerCase()
         bucket.set(key, {
           value: match.value,
+          label: match.reviewLabel,
           count: (bucket.get(key)?.count ?? 0) + 1,
           ignored: ignoredYellow.has(key)
         })
@@ -466,6 +575,7 @@ function App() {
                   <label key={item.value.toLowerCase()} className="flex items-center justify-between gap-2 rounded border p-2">
                     <span>
                       {item.value} <span className="text-xs text-slate-500">({item.count})</span>
+                      {item.label && <span className="ml-2 text-xs text-slate-500">{item.label}</span>}
                     </span>
                     <input
                       type="checkbox"
