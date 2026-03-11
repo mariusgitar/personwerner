@@ -177,7 +177,7 @@ function detectNamePII(text, certainNames) {
 }
 
 function detectCapitalizedPairPII(text, certainNames) {
-  const nameRegex = /\b([A-ZÆØÅ][a-zæøå'-]+(?:\s+[A-ZÆØÅ]\.)?(?:\s+[A-ZÆØÅ][a-zæøå'-]+){1,2})\b/gu
+  const nameRegex = /(?<![a-zæøåA-ZÆØÅ])([A-ZÆØÅ][\p{Ll}'-]+(?:\s+[A-ZÆØÅ]\.)?(?:\s+[A-ZÆØÅ][\p{Ll}'-]+){1,2})(?![a-zæøåA-ZÆØÅ])/gu
   let found
   const matches = []
 
