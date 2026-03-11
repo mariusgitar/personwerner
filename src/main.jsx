@@ -300,6 +300,11 @@ function transformText(text, matches, action) {
   return { text: output, legend: [] }
 }
 
+function formatLegend(legend) {
+  if (!legend.length) return ''
+  return `🔑 Nøkkel: ${legend.map((item) => `${item.pseudonym} = ${item.original}`).join(', ')}`
+}
+
 function downloadBlob(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType })
   const url = URL.createObjectURL(blob)
@@ -357,6 +362,8 @@ function App() {
     () => transformText(inputText, filteredMatches, globalAction),
     [inputText, filteredMatches, globalAction]
   )
+
+  const formattedLegend = useMemo(() => formatLegend(transformedResult.legend), [transformedResult.legend])
 
   const handleFileUpload = async (event) => {
     const file = event.target.files?.[0]
@@ -513,10 +520,7 @@ function App() {
 
             {globalAction === ACTIONS.pseudonymize && transformedResult.legend.length > 0 && (
               <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
-                <p className="font-medium">Forklaring</p>
-                <p className="mt-1 text-slate-700">
-                  {transformedResult.legend.map((item) => `${item.pseudonym} = ${item.original}`).join(', ')}
-                </p>
+                <p className="text-slate-700">{formattedLegend}</p>
               </div>
             )}
           </div>
@@ -524,7 +528,14 @@ function App() {
           <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
             <button
               type="button"
-              onClick={() => downloadBlob(transformedResult.text, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')}
+              onClick={() => {
+                const txtContent =
+                  globalAction === ACTIONS.pseudonymize && formattedLegend
+                    ? `${transformedResult.text}\n\n${formattedLegend}`
+                    : transformedResult.text
+
+                downloadBlob(txtContent, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')
+              }}
               className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
             >
               Last ned TXT
@@ -532,7 +543,13 @@ function App() {
             <button
               type="button"
               onClick={() => {
-                const csv = Papa.unparse([{ resultat: transformedResult.text }])
+                const rows = [{ resultat: transformedResult.text }]
+
+                if (globalAction === ACTIONS.pseudonymize && formattedLegend) {
+                  rows.push({ resultat: formattedLegend })
+                }
+
+                const csv = Papa.unparse(rows)
                 downloadBlob(csv, 'personwerner-resultat.csv', 'text/csv;charset=utf-8')
               }}
               className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
