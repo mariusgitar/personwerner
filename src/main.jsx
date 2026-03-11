@@ -39,13 +39,15 @@ const CERTAIN_NAMES = new Set(namesData.certain.map((name) => name.toLowerCase()
 const AMBIGUOUS_NAMES = new Set(namesData.ambiguous.map((name) => name.toLowerCase()))
 const LAST_NAMES = new Set(namesData.lastNames.map((name) => name.toLowerCase()))
 
-const defaultActions = {
-  fnr: ACTIONS.placeholder,
-  dnr: ACTIONS.placeholder,
-  phone: ACTIONS.placeholder,
-  email: ACTIONS.placeholder,
-  date: ACTIONS.mark,
-  name: ACTIONS.placeholder
+const defaultAction = ACTIONS.placeholder
+
+const LABELS = {
+  fnr: 'Fødselsnummer',
+  dnr: 'D-nummer',
+  phone: 'Telefon',
+  email: 'E-post',
+  date: 'Dato',
+  name: 'Navn'
 }
 
 function createMatch(start, end, value, piiType, confidence = 'high') {
@@ -196,7 +198,7 @@ function renderHighlightedText(text, matches) {
   return chunks
 }
 
-function transformText(text, matches, actionsByType) {
+function transformText(text, matches, action) {
   if (!text) return ''
   if (!matches.length) return text
 
@@ -205,8 +207,6 @@ function transformText(text, matches, actionsByType) {
 
   matches.forEach((match) => {
     output += text.slice(cursor, match.start)
-    const action = actionsByType[match.piiType] ?? ACTIONS.mark
-
     if (action === ACTIONS.mark) {
       output += text.slice(match.start, match.end)
     } else if (action === ACTIONS.placeholder) {
@@ -235,7 +235,7 @@ function downloadBlob(content, filename, mimeType) {
 function App() {
   const [inputText, setInputText] = useState('')
   const [loading, setLoading] = useState(false)
-  const [actionsByType, setActionsByType] = useState(defaultActions)
+  const [globalAction, setGlobalAction] = useState(defaultAction)
   const [ignoredYellow, setIgnoredYellow] = useState(new Set())
 
   const allMatches = useMemo(() => detectPII(inputText), [inputText])
@@ -262,8 +262,8 @@ function App() {
   }, [allMatches, ignoredYellow])
 
   const transformedText = useMemo(
-    () => transformText(inputText, filteredMatches, actionsByType),
-    [inputText, filteredMatches, actionsByType]
+    () => transformText(inputText, filteredMatches, globalAction),
+    [inputText, filteredMatches, globalAction]
   )
 
   const handleFileUpload = async (event) => {
@@ -323,6 +323,11 @@ function App() {
         <section className="grid gap-6 lg:grid-cols-3">
           <article className="rounded-xl bg-white p-4 shadow lg:col-span-2">
             <h2 className="mb-3 text-xl font-semibold">Funn og markering</h2>
+            {inputText && (
+              <p className="mb-3 inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                Werner fant {filteredMatches.length} treff
+              </p>
+            )}
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words leading-relaxed">
               {inputText ? (
                 renderHighlightedText(inputText, filteredMatches)
@@ -332,7 +337,7 @@ function App() {
             </div>
             {noMatches && (
               <p className="mt-3 rounded bg-emerald-50 p-3 text-emerald-800">
-                Ingen PII funnet. Enten er dokumentet rent, eller så er du veldig flink til å anonymisere allerede. 🎉
+                Ingen tvetydige treff foreløpig.
               </p>
             )}
           </article>
@@ -373,35 +378,37 @@ function App() {
 
         <section className="rounded-xl bg-white p-4 shadow">
           <h2 className="text-xl font-semibold">Tiltak for bekreftet PII</h2>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {Object.keys(defaultActions).map((type) => (
-              <label key={type} className="flex flex-col gap-1 text-sm">
-                <span className="font-medium uppercase text-slate-600">{type}</span>
-                <select
-                  value={actionsByType[type]}
-                  onChange={(event) => setActionsByType((prev) => ({ ...prev, [type]: event.target.value }))}
-                  className="rounded border border-slate-300 p-2"
-                >
-                  <option value={ACTIONS.mark}>Mark</option>
-                  <option value={ACTIONS.remove}>Remove</option>
-                  <option value={ACTIONS.placeholder}>Placeholder</option>
-                </select>
-              </label>
-            ))}
+          <div className="mt-3 max-w-xl">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-medium text-slate-700">Hva vil du gjøre med all bekreftet PII?</span>
+              <select
+                value={globalAction}
+                onChange={(event) => setGlobalAction(event.target.value)}
+                className="rounded border border-slate-300 p-2"
+              >
+                <option value={ACTIONS.mark}>Marker</option>
+                <option value={ACTIONS.remove}>Fjern</option>
+                <option value={ACTIONS.placeholder}>Erstatt med plassholder</option>
+              </select>
+            </label>
           </div>
 
+          <p className="mt-3 text-xs text-slate-500">
+            Gjelder: {Object.values(LABELS).join(', ')}.
+          </p>
+
           <div className="mt-4">
-            <h3 className="font-semibold">Resultat (etter tiltak)</h3>
+            <h3 className="font-semibold">Resultat</h3>
             <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words text-sm">
               {transformedText || 'Ingen tekst å vise enda.'}
             </pre>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
             <button
               type="button"
               onClick={() => downloadBlob(transformedText, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')}
-              className="rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white"
+              className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
             >
               Last ned TXT
             </button>
@@ -411,7 +418,7 @@ function App() {
                 const csv = Papa.unparse([{ resultat: transformedText }])
                 downloadBlob(csv, 'personwerner-resultat.csv', 'text/csv;charset=utf-8')
               }}
-              className="rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white"
+              className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
             >
               Last ned CSV
             </button>
