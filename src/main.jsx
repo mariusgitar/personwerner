@@ -38,7 +38,7 @@ const MONTHS = [
 
 const NON_NAME_CAPITALIZED_WORDS = new Set([
   'norge',
-  'norwegian',
+  'norsk',
   'oslo',
   'bergen',
   'trondheim',
@@ -71,7 +71,12 @@ const NON_NAME_CAPITALIZED_WORDS = new Set([
   'fylke',
   'stat',
   'regjeringen',
-  'stortinget'
+  'stortinget',
+  'moderator',
+  'intervjuer',
+  'arkivet',
+  'nguyen',
+  'abdulrahman'
 ])
 
 const PLACEHOLDERS = {
@@ -212,63 +217,35 @@ function detectNamePII(text, certainNames) {
   return matches
 }
 
-function isCapitalizedWord(token) {
-  return isCapitalizedNameToken(token)
-}
-
-function isSentenceStartToken(text, tokenStart) {
-  for (let index = tokenStart - 1; index >= 0; index -= 1) {
-    const char = text[index]
-    if (/\s/u.test(char)) continue
-    return char === '.' || char === '!' || char === '?'
-  }
-
-  return false
-}
-
 function detectCapitalizedPairPII(text, certainNames) {
-  const wordRegex = /\b[\p{L}][\p{L}'-]*\b/gu
-  const tokens = []
+  const nameRegex = /\b([A-ZÆØÅ][a-zæøå'-]+(?:\s+[A-ZÆØÅ]\.)?(?:\s+[A-ZÆØÅ][a-zæøå'-]+){1,2})\b/gu
   let found
-
-  while ((found = wordRegex.exec(text)) !== null) {
-    tokens.push({ value: found[0], lower: found[0].toLowerCase(), start: found.index, end: found.index + found[0].length })
-  }
-
   const matches = []
-  let index = 0
 
-  while (index < tokens.length) {
-    if (!isCapitalizedWord(tokens[index]) || NON_NAME_CAPITALIZED_WORDS.has(tokens[index].lower)) {
-      index += 1
+  while ((found = nameRegex.exec(text)) !== null) {
+    const fullMatch = found[1]
+    const words = fullMatch
+      .split(/\s+/u)
+      .map((word) => word.replace(/\.$/u, ''))
+      .filter(Boolean)
+    const normalizedWords = words.map((word) => word.toLowerCase())
+
+    if (normalizedWords.length === 0 || NON_NAME_CAPITALIZED_WORDS.has(normalizedWords[0])) {
       continue
     }
 
-    let endIndex = index
-    while (endIndex + 1 < tokens.length) {
-      const nextToken = tokens[endIndex + 1]
-      if (!isCapitalizedWord(nextToken) || NON_NAME_CAPITALIZED_WORDS.has(nextToken.lower)) break
-      if (text.slice(tokens[endIndex].end, nextToken.start).trim() !== '') break
-      endIndex += 1
-    }
+    const containsCertain = normalizedWords.some((word) => certainNames.has(word))
+    const containsAmbiguous = normalizedWords.some((word) => AMBIGUOUS_NAMES.has(word))
 
-    const runLength = endIndex - index + 1
-    if (runLength >= 2 && !isSentenceStartToken(text, tokens[index].start)) {
-      const runTokens = tokens.slice(index, endIndex + 1)
-      const confidence = runTokens.some((token) => certainNames.has(token.lower) || AMBIGUOUS_NAMES.has(token.lower))
-        ? 'high'
-        : 'ambiguous'
-      const reviewLabel = confidence === 'ambiguous' ? 'Mulig navn (ukjent)' : undefined
+    const confidence = containsCertain ? 'high' : 'ambiguous'
+    const reviewLabel = !containsCertain && !containsAmbiguous ? 'Mulig navn (ukjent)' : undefined
 
-      matches.push(
-        createMatch(tokens[index].start, tokens[endIndex].end, text.slice(tokens[index].start, tokens[endIndex].end), 'name', confidence, {
-          nameRole: 'first',
-          reviewLabel
-        })
-      )
-    }
-
-    index = endIndex + 1
+    matches.push(
+      createMatch(found.index, found.index + fullMatch.length, fullMatch, 'name', confidence, {
+        nameRole: 'first',
+        reviewLabel
+      })
+    )
   }
 
   return matches
