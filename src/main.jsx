@@ -168,6 +168,13 @@ function detectRegexPII(text) {
   return matches
 }
 
+function isCapitalizedNameToken(token) {
+  if (!token?.value) return false
+
+  const parts = token.value.split('-')
+  return parts.every((part) => /^[\p{Lu}][\p{L}']*$/u.test(part))
+}
+
 function detectNamePII(text, certainNames) {
   const wordRegex = /\b[\p{L}][\p{L}'-]*\b/gu
   const tokens = []
@@ -181,6 +188,8 @@ function detectNamePII(text, certainNames) {
   const firstNameTokenIndexes = new Set()
 
   tokens.forEach((token, index) => {
+    if (!isCapitalizedNameToken(token)) return
+
     if (certainNames.has(token.lower)) {
       matches.push(createMatch(token.start, token.end, token.value, 'name', 'high', { nameRole: 'first' }))
       firstNameTokenIndexes.add(index)
@@ -191,6 +200,7 @@ function detectNamePII(text, certainNames) {
   })
 
   tokens.forEach((token, index) => {
+    if (!isCapitalizedNameToken(token)) return
     if (!LAST_NAMES.has(token.lower)) return
     const prevIsFirstName = firstNameTokenIndexes.has(index - 1)
     const nextIsFirstName = firstNameTokenIndexes.has(index + 1)
@@ -203,7 +213,7 @@ function detectNamePII(text, certainNames) {
 }
 
 function isCapitalizedWord(token) {
-  return /^[\p{Lu}][\p{L}'-]{1,}$/u.test(token.value)
+  return isCapitalizedNameToken(token)
 }
 
 function isSentenceStartToken(text, tokenStart) {
