@@ -1,501 +1,2077 @@
 {
   "certain": [
-    "Ada",
-    "Adam",
-    "Agnes",
-    "Aksel",
-    "Alexander",
-    "Alfhild",
-    "Alfred",
-    "Alma",
-    "Amalie",
-    "Amelia",
-    "Anders",
-    "Andrea",
-    "Andreas",
-    "Ane",
-    "Anette",
-    "Anine",
-    "Anita",
-    "Anna",
-    "Anne",
-    "Arild",
-    "Arne",
-    "Arnt",
-    "Arve",
-    "Arvid",
-    "Aslaug",
-    "Astri",
-    "Astrid",
-    "Atle",
-    "Audun",
-    "Aurora",
-    "Bendik",
-    "Benedikte",
-    "Benjamin",
-    "Bente",
-    "Bergljot",
-    "Berit",
-    "Bernt",
-    "Birgitte",
-    "Birk",
-    "Bjarne",
-    "Bjarte",
-    "Bjørg",
-    "Bjørn",
-    "Bjørnar",
-    "Borghild",
-    "Brage",
-    "Brit",
-    "Børge",
-    "Camilla",
-    "Cathrine",
-    "Cato",
-    "Cecilie",
-    "Charlotte",
-    "Christer",
-    "Christian",
-    "Christina",
-    "Christine",
-    "Christoffer",
-    "Dag",
-    "Dagfinn",
-    "Daniel",
-    "Edvard",
-    "Edvin",
-    "Egil",
-    "Einar",
-    "Eira",
-    "Eirik",
-    "Eivind",
-    "Eldrid",
-    "Elias",
-    "Elin",
-    "Elisabeth",
-    "Ella",
-    "Ellie",
-    "Ellinor",
-    "Else",
-    "Emil",
-    "Emilia",
-    "Emilie",
-    "Emma",
-    "Erlend",
-    "Erling",
-    "Espen",
-    "Eva",
-    "Even",
-    "Felix",
-    "Filip",
-    "Finn",
-    "Frank",
-    "Frida",
-    "Frode",
-    "Frøya",
-    "Gabriel",
-    "Geir",
-    "Gerd",
-    "Gisle",
-    "Gjermund",
-    "Glenn",
-    "Gorm",
-    "Grete",
-    "Gudmund",
-    "Gudrun",
-    "Gunhild",
-    "Gunleiv",
-    "Gunnar",
-    "Gunvor",
-    "Guro",
-    "Gustav",
-    "Hallgeir",
-    "Hallvard",
-    "Halvor",
-    "Hanna",
-    "Hannah",
-    "Hanne",
-    "Hans",
-    "Harald",
-    "Hedda",
-    "Hedvig",
-    "Hege",
-    "Heidi",
-    "Helene",
-    "Helge",
-    "Hennie",
-    "Henning",
-    "Henrik",
-    "Herman",
-    "Hilde",
-    "Hildegunn",
-    "Hjalmar",
-    "Håkon",
-    "Håvard",
-    "Iben",
-    "Ida",
-    "Inga",
-    "Ingebjørg",
-    "Ingeborg",
-    "Inger",
-    "Ingrid",
-    "Ingvar",
-    "Isak",
-    "Iselin",
-    "Ivan",
-    "Ivar",
-    "Iver",
-    "Jakob",
-    "Jan",
-    "Jarle",
-    "Jenny",
-    "Jens",
-    "Jim",
-    "Joachim",
-    "Joakim",
-    "Joar",
-    "Johan",
-    "Johanne",
-    "Johannes",
-    "Johansen",
-    "Jonas",
-    "Jonny",
-    "Jorun",
-    "Jorunn",
-    "Josefine",
-    "Jostein",
-    "Julie",
-    "Jørgen",
-    "Jørn",
-    "Kaare",
-    "Karen",
-    "Kari",
-    "Karianne",
-    "Karl",
-    "Karoline",
-    "Kasper",
-    "Katrine",
-    "Kenneth",
-    "Ketil",
-    "Kim",
-    "Kirsten",
-    "Kjell",
-    "Klara",
-    "Klaus",
-    "Knut",
-    "Kolbjørn",
-    "Kristian",
-    "Kristin",
-    "Kristine",
-    "Kristoffer",
-    "Kåre",
-    "Laila",
-    "Lars",
-    "Lasse",
-    "Leah",
-    "Leif",
-    "Lena",
-    "Lene",
-    "Leo",
-    "Leon",
-    "Liam",
-    "Lilly",
-    "Linda",
-    "Line",
-    "Linn",
-    "Linnea",
-    "Lise",
-    "Liv",
-    "Lucas",
-    "Ludvig",
-    "Luka",
-    "Madeleine",
-    "Magna",
-    "Magne",
-    "Magnus",
-    "Maja",
-    "Malin",
-    "Marcus",
-    "Maren",
-    "Margit",
-    "Maria",
-    "Marianne",
-    "Marie",
-    "Marit",
-    "Marius",
-    "Markus",
-    "Marta",
-    "Marte",
-    "Marthe",
-    "Martin",
-    "Martine",
-    "Matheo",
-    "Mathias",
-    "Mathilde",
-    "Mats",
-    "Merete",
-    "Mette",
-    "Mia",
-    "Mie",
-    "Mikael",
-    "Mikkel",
-    "Miriam",
-    "Mohammad",
-    "Mona",
-    "Monica",
-    "Morten",
-    "Nathalie",
-    "Nicolai",
-    "Niklas",
-    "Nikolai",
-    "Nils",
-    "Nina",
-    "Njord",
-    "Njål",
-    "Noah",
-    "Nora",
-    "Odd",
-    "Odin",
-    "Olaf",
-    "Olav",
-    "Ole",
-    "Oline",
-    "Oliver",
-    "Olivia",
-    "Oskar",
-    "Ottar",
-    "Peder",
-    "Per",
-    "Pernille",
-    "Petra",
-    "Pål",
-    "Ragnar",
-    "Ragnhild",
-    "Ragni",
-    "Randi",
-    "Rasmus",
-    "Reidar",
-    "Reidun",
-    "Renate",
-    "Richard",
-    "Roald",
-    "Roar",
-    "Robin",
-    "Roger",
-    "Rolf",
-    "Rune",
-    "Ruth",
-    "Saga",
-    "Sander",
-    "Sandra",
-    "Sara",
-    "Sebastian",
-    "Selma",
-    "Sigbjørn",
-    "Sigmund",
-    "Signe",
-    "Sigrid",
-    "Sigrun",
-    "Sigurd",
-    "Silje",
-    "Sindre",
-    "Siri",
-    "Siv",
-    "Snorre",
-    "Sofia",
-    "Sofie",
-    "Solrun",
-    "Solveig",
-    "Sonja",
-    "Steffen",
-    "Steinar",
-    "Stian",
-    "Stig",
-    "Stine",
-    "Sturla",
-    "Susanne",
-    "Svein",
-    "Sven",
-    "Sverre",
-    "Synnøve",
-    "Tarjei",
-    "Terje",
-    "Thea",
-    "Theo",
-    "Theodor",
-    "Therese",
-    "Thomas",
-    "Thorbjørg",
-    "Tiril",
-    "Tobias",
-    "Tomas",
-    "Tommy",
-    "Tone",
-    "Tonje",
-    "Tor",
-    "Torbjørn",
-    "Tordis",
-    "Tore",
-    "Torgeir",
-    "Torild",
-    "Torill",
-    "Torstein",
-    "Torunn",
-    "Tove",
-    "Trine",
-    "Trond",
-    "Truls",
-    "Tuva",
-    "Ulrik",
-    "Unni",
-    "Vegard",
-    "Venke",
-    "Veronica",
-    "Vetle",
-    "Victor",
-    "Victoria",
-    "Vidar",
-    "Vigdis",
-    "Vilde",
-    "Vilma",
-    "Wenche",
-    "Wenke",
-    "William",
-    "Ylva",
-    "Yngve",
-    "Åse",
-    "Åshild",
-    "Åsmund",
-    "Åsne",
-    "Øyvind"
+    {
+      "name": "Ole",
+      "score": 2000
+    },
+    {
+      "name": "Hans",
+      "score": 1900
+    },
+    {
+      "name": "Anne",
+      "score": 1800
+    },
+    {
+      "name": "Arne",
+      "score": 1800
+    },
+    {
+      "name": "Inger",
+      "score": 1700
+    },
+    {
+      "name": "Jan",
+      "score": 1700
+    },
+    {
+      "name": "Kari",
+      "score": 1600
+    },
+    {
+      "name": "Per",
+      "score": 1600
+    },
+    {
+      "name": "Marit",
+      "score": 1500
+    },
+    {
+      "name": "Berit",
+      "score": 1400
+    },
+    {
+      "name": "Marie",
+      "score": 1300
+    },
+    {
+      "name": "Lars",
+      "score": 1300
+    },
+    {
+      "name": "Kjell",
+      "score": 1300
+    },
+    {
+      "name": "Anna",
+      "score": 1200
+    },
+    {
+      "name": "Karen",
+      "score": 1200
+    },
+    {
+      "name": "Johan",
+      "score": 1200
+    },
+    {
+      "name": "Nils",
+      "score": 1200
+    },
+    {
+      "name": "Bjørn",
+      "score": 1200
+    },
+    {
+      "name": "Gerd",
+      "score": 1100
+    },
+    {
+      "name": "Ingeborg",
+      "score": 1100
+    },
+    {
+      "name": "Kristian",
+      "score": 1100
+    },
+    {
+      "name": "Karl",
+      "score": 1100
+    },
+    {
+      "name": "Harald",
+      "score": 1100
+    },
+    {
+      "name": "Olaf",
+      "score": 1100
+    },
+    {
+      "name": "Ruth",
+      "score": 1050
+    },
+    {
+      "name": "Inga",
+      "score": 1000
+    },
+    {
+      "name": "Peder",
+      "score": 1000
+    },
+    {
+      "name": "Anders",
+      "score": 1000
+    },
+    {
+      "name": "Emma",
+      "score": 980
+    },
+    {
+      "name": "Noah",
+      "score": 980
+    },
+    {
+      "name": "Jakob",
+      "score": 960
+    },
+    {
+      "name": "Nora",
+      "score": 950
+    },
+    {
+      "name": "Silje",
+      "score": 950
+    },
+    {
+      "name": "Marta",
+      "score": 950
+    },
+    {
+      "name": "Lucas",
+      "score": 950
+    },
+    {
+      "name": "Einar",
+      "score": 950
+    },
+    {
+      "name": "Leif",
+      "score": 950
+    },
+    {
+      "name": "Knut",
+      "score": 950
+    },
+    {
+      "name": "Geir",
+      "score": 950
+    },
+    {
+      "name": "Thomas",
+      "score": 950
+    },
+    {
+      "name": "Sofie",
+      "score": 940
+    },
+    {
+      "name": "Emil",
+      "score": 940
+    },
+    {
+      "name": "Olivia",
+      "score": 930
+    },
+    {
+      "name": "Hilde",
+      "score": 920
+    },
+    {
+      "name": "Oskar",
+      "score": 920
+    },
+    {
+      "name": "William",
+      "score": 910
+    },
+    {
+      "name": "Ella",
+      "score": 900
+    },
+    {
+      "name": "Ida",
+      "score": 900
+    },
+    {
+      "name": "Bente",
+      "score": 900
+    },
+    {
+      "name": "Heidi",
+      "score": 900
+    },
+    {
+      "name": "Margit",
+      "score": 900
+    },
+    {
+      "name": "Elias",
+      "score": 900
+    },
+    {
+      "name": "Henrik",
+      "score": 900
+    },
+    {
+      "name": "Andreas",
+      "score": 900
+    },
+    {
+      "name": "Erling",
+      "score": 900
+    },
+    {
+      "name": "Rolf",
+      "score": 900
+    },
+    {
+      "name": "Odd",
+      "score": 900
+    },
+    {
+      "name": "Gunnar",
+      "score": 900
+    },
+    {
+      "name": "Terje",
+      "score": 900
+    },
+    {
+      "name": "Tor",
+      "score": 900
+    },
+    {
+      "name": "Jon",
+      "score": 900
+    },
+    {
+      "name": "Isak",
+      "score": 890
+    },
+    {
+      "name": "Leah",
+      "score": 880
+    },
+    {
+      "name": "Kristine",
+      "score": 880
+    },
+    {
+      "name": "Oliver",
+      "score": 880
+    },
+    {
+      "name": "Magnus",
+      "score": 880
+    },
+    {
+      "name": "Nina",
+      "score": 870
+    },
+    {
+      "name": "Ludvig",
+      "score": 870
+    },
+    {
+      "name": "Frida",
+      "score": 860
+    },
+    {
+      "name": "Theodor",
+      "score": 860
+    },
+    {
+      "name": "Sofia",
+      "score": 850
+    },
+    {
+      "name": "Tove",
+      "score": 850
+    },
+    {
+      "name": "Borghild",
+      "score": 850
+    },
+    {
+      "name": "Kasper",
+      "score": 850
+    },
+    {
+      "name": "Martin",
+      "score": 850
+    },
+    {
+      "name": "Kåre",
+      "score": 850
+    },
+    {
+      "name": "Rune",
+      "score": 850
+    },
+    {
+      "name": "Tore",
+      "score": 850
+    },
+    {
+      "name": "Helge",
+      "score": 850
+    },
+    {
+      "name": "Egil",
+      "score": 850
+    },
+    {
+      "name": "Liam",
+      "score": 840
+    },
+    {
+      "name": "Daniel",
+      "score": 840
+    },
+    {
+      "name": "Anita",
+      "score": 830
+    },
+    {
+      "name": "Filip",
+      "score": 830
+    },
+    {
+      "name": "Ellinor",
+      "score": 820
+    },
+    {
+      "name": "Kristin",
+      "score": 820
+    },
+    {
+      "name": "Gudrun",
+      "score": 820
+    },
+    {
+      "name": "Johannes",
+      "score": 820
+    },
+    {
+      "name": "Jonas",
+      "score": 820
+    },
+    {
+      "name": "Alexander",
+      "score": 820
+    },
+    {
+      "name": "Astrid",
+      "score": 810
+    },
+    {
+      "name": "Olav",
+      "score": 810
+    },
+    {
+      "name": "Alma",
+      "score": 800
+    },
+    {
+      "name": "Julie",
+      "score": 800
+    },
+    {
+      "name": "Wenche",
+      "score": 800
+    },
+    {
+      "name": "Bjørg",
+      "score": 800
+    },
+    {
+      "name": "Aksel",
+      "score": 800
+    },
+    {
+      "name": "Jens",
+      "score": 800
+    },
+    {
+      "name": "Sverre",
+      "score": 800
+    },
+    {
+      "name": "Sigurd",
+      "score": 800
+    },
+    {
+      "name": "Markus",
+      "score": 800
+    },
+    {
+      "name": "Morten",
+      "score": 800
+    },
+    {
+      "name": "Ivar",
+      "score": 800
+    },
+    {
+      "name": "Finn",
+      "score": 800
+    },
+    {
+      "name": "Eirik",
+      "score": 800
+    },
+    {
+      "name": "Hedda",
+      "score": 790
+    },
+    {
+      "name": "Matheo",
+      "score": 790
+    },
+    {
+      "name": "Selma",
+      "score": 780
+    },
+    {
+      "name": "Marianne",
+      "score": 780
+    },
+    {
+      "name": "Aslaug",
+      "score": 780
+    },
+    {
+      "name": "Theo",
+      "score": 780
+    },
+    {
+      "name": "Mikkel",
+      "score": 780
+    },
+    {
+      "name": "Marius",
+      "score": 780
+    },
+    {
+      "name": "Eivind",
+      "score": 780
+    },
+    {
+      "name": "Håvard",
+      "score": 780
+    },
+    {
+      "name": "Rasmus",
+      "score": 780
+    },
+    {
+      "name": "Maja",
+      "score": 770
+    },
+    {
+      "name": "Ulrik",
+      "score": 770
+    },
+    {
+      "name": "Ingrid",
+      "score": 760
+    },
+    {
+      "name": "Camilla",
+      "score": 760
+    },
+    {
+      "name": "Ragnhild",
+      "score": 760
+    },
+    {
+      "name": "Tobias",
+      "score": 760
+    },
+    {
+      "name": "Aurora",
+      "score": 750
+    },
+    {
+      "name": "Thea",
+      "score": 750
+    },
+    {
+      "name": "Hege",
+      "score": 750
+    },
+    {
+      "name": "Maria",
+      "score": 750
+    },
+    {
+      "name": "Grete",
+      "score": 750
+    },
+    {
+      "name": "Liv",
+      "score": 750
+    },
+    {
+      "name": "Håkon",
+      "score": 750
+    },
+    {
+      "name": "Sander",
+      "score": 750
+    },
+    {
+      "name": "Kristoffer",
+      "score": 750
+    },
+    {
+      "name": "Ragnar",
+      "score": 750
+    },
+    {
+      "name": "Jørgen",
+      "score": 750
+    },
+    {
+      "name": "Edvard",
+      "score": 750
+    },
+    {
+      "name": "Bjarne",
+      "score": 750
+    },
+    {
+      "name": "Arild",
+      "score": 750
+    },
+    {
+      "name": "Christian",
+      "score": 750
+    },
+    {
+      "name": "Erlend",
+      "score": 750
+    },
+    {
+      "name": "Halvor",
+      "score": 750
+    },
+    {
+      "name": "Roald",
+      "score": 750
+    },
+    {
+      "name": "Simon",
+      "score": 750
+    },
+    {
+      "name": "Torbjørn",
+      "score": 750
+    },
+    {
+      "name": "Trygve",
+      "score": 750
+    },
+    {
+      "name": "Emilie",
+      "score": 740
+    },
+    {
+      "name": "Katrine",
+      "score": 740
+    },
+    {
+      "name": "Birk",
+      "score": 740
+    },
+    {
+      "name": "Gustav",
+      "score": 730
+    },
+    {
+      "name": "Hedvig",
+      "score": 720
+    },
+    {
+      "name": "Elisabeth",
+      "score": 720
+    },
+    {
+      "name": "Marte",
+      "score": 720
+    },
+    {
+      "name": "Herman",
+      "score": 720
+    },
+    {
+      "name": "Joakim",
+      "score": 720
+    },
+    {
+      "name": "Trond",
+      "score": 720
+    },
+    {
+      "name": "Pål",
+      "score": 720
+    },
+    {
+      "name": "Reidar",
+      "score": 720
+    },
+    {
+      "name": "Frank",
+      "score": 720
+    },
+    {
+      "name": "Bendik",
+      "score": 720
+    },
+    {
+      "name": "Arvid",
+      "score": 720
+    },
+    {
+      "name": "Audun",
+      "score": 720
+    },
+    {
+      "name": "Henning",
+      "score": 720
+    },
+    {
+      "name": "Ingvar",
+      "score": 720
+    },
+    {
+      "name": "Sindre",
+      "score": 720
+    },
+    {
+      "name": "Torstein",
+      "score": 720
+    },
+    {
+      "name": "Samuel",
+      "score": 720
+    },
+    {
+      "name": "Øystein",
+      "score": 720
+    },
+    {
+      "name": "Iben",
+      "score": 710
+    },
+    {
+      "name": "Alfred",
+      "score": 710
+    },
+    {
+      "name": "Ada",
+      "score": 700
+    },
+    {
+      "name": "Monica",
+      "score": 700
+    },
+    {
+      "name": "Linn",
+      "score": 700
+    },
+    {
+      "name": "Torill",
+      "score": 700
+    },
+    {
+      "name": "Else",
+      "score": 700
+    },
+    {
+      "name": "Kirsten",
+      "score": 700
+    },
+    {
+      "name": "Hennie",
+      "score": 700
+    },
+    {
+      "name": "Mathias",
+      "score": 700
+    },
+    {
+      "name": "Even",
+      "score": 700
+    },
+    {
+      "name": "Stian",
+      "score": 700
+    },
+    {
+      "name": "Steinar",
+      "score": 700
+    },
+    {
+      "name": "Øyvind",
+      "score": 700
+    },
+    {
+      "name": "Sigmund",
+      "score": 700
+    },
+    {
+      "name": "Lasse",
+      "score": 700
+    },
+    {
+      "name": "Jørn",
+      "score": 700
+    },
+    {
+      "name": "Hallvard",
+      "score": 700
+    },
+    {
+      "name": "Dagfinn",
+      "score": 700
+    },
+    {
+      "name": "Bernt",
+      "score": 700
+    },
+    {
+      "name": "Atle",
+      "score": 700
+    },
+    {
+      "name": "Christoffer",
+      "score": 700
+    },
+    {
+      "name": "Hjalmar",
+      "score": 700
+    },
+    {
+      "name": "Jarle",
+      "score": 700
+    },
+    {
+      "name": "Kim",
+      "score": 700
+    },
+    {
+      "name": "Sebastian",
+      "score": 700
+    },
+    {
+      "name": "Tomas",
+      "score": 700
+    },
+    {
+      "name": "Torgeir",
+      "score": 700
+    },
+    {
+      "name": "Kjetil",
+      "score": 700
+    },
+    {
+      "name": "Robert",
+      "score": 700
+    },
+    {
+      "name": "Mathilde",
+      "score": 690
+    },
+    {
+      "name": "Karoline",
+      "score": 690
+    },
+    {
+      "name": "Leo",
+      "score": 690
+    },
+    {
+      "name": "Mia",
+      "score": 680
+    },
+    {
+      "name": "Linda",
+      "score": 680
+    },
+    {
+      "name": "Stine",
+      "score": 680
+    },
+    {
+      "name": "Randi",
+      "score": 680
+    },
+    {
+      "name": "Tone",
+      "score": 680
+    },
+    {
+      "name": "Mona",
+      "score": 680
+    },
+    {
+      "name": "Adam",
+      "score": 680
+    },
+    {
+      "name": "Espen",
+      "score": 680
+    },
+    {
+      "name": "Steffen",
+      "score": 680
+    },
+    {
+      "name": "Vidar",
+      "score": 680
+    },
+    {
+      "name": "Ottar",
+      "score": 680
+    },
+    {
+      "name": "Jostein",
+      "score": 680
+    },
+    {
+      "name": "Bjarte",
+      "score": 680
+    },
+    {
+      "name": "Arve",
+      "score": 680
+    },
+    {
+      "name": "Robin",
+      "score": 680
+    },
+    {
+      "name": "Sigbjørn",
+      "score": 680
+    },
+    {
+      "name": "Stig",
+      "score": 680
+    },
+    {
+      "name": "Tarjei",
+      "score": 680
+    },
+    {
+      "name": "Truls",
+      "score": 680
+    },
+    {
+      "name": "Konrad",
+      "score": 680
+    },
+    {
+      "name": "Ruben",
+      "score": 680
+    },
+    {
+      "name": "Stefan",
+      "score": 680
+    },
+    {
+      "name": "Tormod",
+      "score": 680
+    },
+    {
+      "name": "Josefine",
+      "score": 670
+    },
+    {
+      "name": "Jenny",
+      "score": 660
+    },
+    {
+      "name": "Åse",
+      "score": 660
+    },
+    {
+      "name": "Odin",
+      "score": 660
+    },
+    {
+      "name": "Frode",
+      "score": 660
+    },
+    {
+      "name": "Roar",
+      "score": 660
+    },
+    {
+      "name": "Tommy",
+      "score": 660
+    },
+    {
+      "name": "Nikolai",
+      "score": 660
+    },
+    {
+      "name": "Ellie",
+      "score": 650
+    },
+    {
+      "name": "Elin",
+      "score": 650
+    },
+    {
+      "name": "Maren",
+      "score": 650
+    },
+    {
+      "name": "Vetle",
+      "score": 650
+    },
+    {
+      "name": "Vegard",
+      "score": 650
+    },
+    {
+      "name": "Mats",
+      "score": 650
+    },
+    {
+      "name": "Klaus",
+      "score": 650
+    },
+    {
+      "name": "Gudmund",
+      "score": 650
+    },
+    {
+      "name": "Børge",
+      "score": 650
+    },
+    {
+      "name": "Gisle",
+      "score": 650
+    },
+    {
+      "name": "Kolbjørn",
+      "score": 650
+    },
+    {
+      "name": "Richard",
+      "score": 650
+    },
+    {
+      "name": "Snorre",
+      "score": 650
+    },
+    {
+      "name": "Åsmund",
+      "score": 650
+    },
+    {
+      "name": "Julian",
+      "score": 650
+    },
+    {
+      "name": "Mikael",
+      "score": 650
+    },
+    {
+      "name": "Preben",
+      "score": 650
+    },
+    {
+      "name": "Eva",
+      "score": 640
+    },
+    {
+      "name": "Laila",
+      "score": 640
+    },
+    {
+      "name": "Roger",
+      "score": 640
+    },
+    {
+      "name": "Sturla",
+      "score": 640
+    },
+    {
+      "name": "Niklas",
+      "score": 640
+    },
+    {
+      "name": "Julius",
+      "score": 640
+    },
+    {
+      "name": "Line",
+      "score": 630
+    },
+    {
+      "name": "Martine",
+      "score": 630
+    },
+    {
+      "name": "Iver",
+      "score": 630
+    },
+    {
+      "name": "Ketil",
+      "score": 630
+    },
+    {
+      "name": "Sara",
+      "score": 620
+    },
+    {
+      "name": "Anette",
+      "score": 620
+    },
+    {
+      "name": "Siri",
+      "score": 620
+    },
+    {
+      "name": "Mette",
+      "score": 620
+    },
+    {
+      "name": "Victor",
+      "score": 620
+    },
+    {
+      "name": "Yngve",
+      "score": 620
+    },
+    {
+      "name": "Marcus",
+      "score": 620
+    },
+    {
+      "name": "Cato",
+      "score": 620
+    },
+    {
+      "name": "Gjermund",
+      "score": 620
+    },
+    {
+      "name": "Hallgeir",
+      "score": 620
+    },
+    {
+      "name": "Nicolai",
+      "score": 620
+    },
+    {
+      "name": "Jonatan",
+      "score": 620
+    },
+    {
+      "name": "Mohammed",
+      "score": 620
+    },
+    {
+      "name": "Lilly",
+      "score": 610
+    },
+    {
+      "name": "Lene",
+      "score": 610
+    },
+    {
+      "name": "Marthe",
+      "score": 610
+    },
+    {
+      "name": "Kenneth",
+      "score": 610
+    },
+    {
+      "name": "Amalie",
+      "score": 600
+    },
+    {
+      "name": "Malin",
+      "score": 600
+    },
+    {
+      "name": "Cathrine",
+      "score": 600
+    },
+    {
+      "name": "Trine",
+      "score": 600
+    },
+    {
+      "name": "Gunhild",
+      "score": 600
+    },
+    {
+      "name": "Helene",
+      "score": 600
+    },
+    {
+      "name": "Sissel",
+      "score": 600
+    },
+    {
+      "name": "Edvin",
+      "score": 600
+    },
+    {
+      "name": "Njål",
+      "score": 600
+    },
+    {
+      "name": "Ivan",
+      "score": 600
+    },
+    {
+      "name": "Christer",
+      "score": 600
+    },
+    {
+      "name": "Glenn",
+      "score": 600
+    },
+    {
+      "name": "Jonathan",
+      "score": 600
+    },
+    {
+      "name": "Phillip",
+      "score": 600
+    },
+    {
+      "name": "Tiril",
+      "score": 590
+    },
+    {
+      "name": "Siv",
+      "score": 590
+    },
+    {
+      "name": "Felix",
+      "score": 590
+    },
+    {
+      "name": "Solveig",
+      "score": 580
+    },
+    {
+      "name": "Christine",
+      "score": 580
+    },
+    {
+      "name": "Sandra",
+      "score": 580
+    },
+    {
+      "name": "Hanne",
+      "score": 580
+    },
+    {
+      "name": "Lise",
+      "score": 580
+    },
+    {
+      "name": "Reidun",
+      "score": 580
+    },
+    {
+      "name": "Cecilie",
+      "score": 580
+    },
+    {
+      "name": "Bodil",
+      "score": 580
+    },
+    {
+      "name": "Luka",
+      "score": 580
+    },
+    {
+      "name": "Gorm",
+      "score": 580
+    },
+    {
+      "name": "Njord",
+      "score": 580
+    },
+    {
+      "name": "Josef",
+      "score": 580
+    },
+    {
+      "name": "Muhamad",
+      "score": 580
+    },
+    {
+      "name": "Patrik",
+      "score": 580
+    },
+    {
+      "name": "Linnea",
+      "score": 570
+    },
+    {
+      "name": "Vigdis",
+      "score": 570
+    },
+    {
+      "name": "Hanna",
+      "score": 560
+    },
+    {
+      "name": "Veronica",
+      "score": 560
+    },
+    {
+      "name": "Charlotte",
+      "score": 560
+    },
+    {
+      "name": "Lena",
+      "score": 560
+    },
+    {
+      "name": "Ingebjørg",
+      "score": 560
+    },
+    {
+      "name": "Vibeke",
+      "score": 560
+    },
+    {
+      "name": "Astri",
+      "score": 560
+    },
+    {
+      "name": "Brage",
+      "score": 560
+    },
+    {
+      "name": "Jordan",
+      "score": 560
+    },
+    {
+      "name": "Joshua",
+      "score": 560
+    },
+    {
+      "name": "Noel",
+      "score": 560
+    },
+    {
+      "name": "Tuva",
+      "score": 550
+    },
+    {
+      "name": "Unni",
+      "score": 550
+    },
+    {
+      "name": "Victoria",
+      "score": 550
+    },
+    {
+      "name": "Gabriel",
+      "score": 550
+    },
+    {
+      "name": "Vilde",
+      "score": 540
+    },
+    {
+      "name": "Therese",
+      "score": 540
+    },
+    {
+      "name": "Tonje",
+      "score": 540
+    },
+    {
+      "name": "Guro",
+      "score": 540
+    },
+    {
+      "name": "Tina",
+      "score": 540
+    },
+    {
+      "name": "Trude",
+      "score": 540
+    },
+    {
+      "name": "Leon",
+      "score": 540
+    },
+    {
+      "name": "Sonja",
+      "score": 530
+    },
+    {
+      "name": "Brit",
+      "score": 530
+    },
+    {
+      "name": "Benjamin",
+      "score": 530
+    },
+    {
+      "name": "Saga",
+      "score": 520
+    },
+    {
+      "name": "Renate",
+      "score": 520
+    },
+    {
+      "name": "Birgitte",
+      "score": 520
+    },
+    {
+      "name": "Andrea",
+      "score": 520
+    },
+    {
+      "name": "Eldrid",
+      "score": 520
+    },
+    {
+      "name": "Pernille",
+      "score": 520
+    },
+    {
+      "name": "Rita",
+      "score": 520
+    },
+    {
+      "name": "Toril",
+      "score": 520
+    },
+    {
+      "name": "Gunn",
+      "score": 520
+    },
+    {
+      "name": "Jorunn",
+      "score": 510
+    },
+    {
+      "name": "Amelia",
+      "score": 500
+    },
+    {
+      "name": "Susanne",
+      "score": 500
+    },
+    {
+      "name": "Ragni",
+      "score": 500
+    },
+    {
+      "name": "Ane",
+      "score": 500
+    },
+    {
+      "name": "Pia",
+      "score": 500
+    },
+    {
+      "name": "Hildegunn",
+      "score": 500
+    },
+    {
+      "name": "Dagmar",
+      "score": 500
+    },
+    {
+      "name": "Åsta",
+      "score": 500
+    },
+    {
+      "name": "Sigrid",
+      "score": 490
+    },
+    {
+      "name": "Synnøve",
+      "score": 490
+    },
+    {
+      "name": "Miriam",
+      "score": 490
+    },
+    {
+      "name": "Signe",
+      "score": 480
+    },
+    {
+      "name": "Iselin",
+      "score": 480
+    },
+    {
+      "name": "Benedikte",
+      "score": 480
+    },
+    {
+      "name": "Bergljot",
+      "score": 480
+    },
+    {
+      "name": "Åshild",
+      "score": 480
+    },
+    {
+      "name": "Emilia",
+      "score": 480
+    },
+    {
+      "name": "Anine",
+      "score": 480
+    },
+    {
+      "name": "Marita",
+      "score": 480
+    },
+    {
+      "name": "Jorun",
+      "score": 480
+    },
+    {
+      "name": "Gunnhild",
+      "score": 480
+    },
+    {
+      "name": "Dagny",
+      "score": 480
+    },
+    {
+      "name": "Arnhild",
+      "score": 480
+    },
+    {
+      "name": "Alva",
+      "score": 480
+    },
+    {
+      "name": "Eira",
+      "score": 470
+    },
+    {
+      "name": "Torunn",
+      "score": 470
+    },
+    {
+      "name": "Frøya",
+      "score": 460
+    },
+    {
+      "name": "Åsne",
+      "score": 460
+    },
+    {
+      "name": "Karianne",
+      "score": 460
+    },
+    {
+      "name": "Magnhild",
+      "score": 460
+    },
+    {
+      "name": "Jorid",
+      "score": 460
+    },
+    {
+      "name": "Dagrun",
+      "score": 460
+    },
+    {
+      "name": "Alfhild",
+      "score": 460
+    },
+    {
+      "name": "Alice",
+      "score": 460
+    },
+    {
+      "name": "Ylva",
+      "score": 450
+    },
+    {
+      "name": "Johanne",
+      "score": 440
+    },
+    {
+      "name": "Nathalie",
+      "score": 440
+    },
+    {
+      "name": "Oddrun",
+      "score": 440
+    },
+    {
+      "name": "Bjørghild",
+      "score": 440
+    },
+    {
+      "name": "Mie",
+      "score": 430
+    },
+    {
+      "name": "Agnes",
+      "score": 420
+    },
+    {
+      "name": "Madeleine",
+      "score": 420
+    },
+    {
+      "name": "Una",
+      "score": 420
+    },
+    {
+      "name": "Oddveig",
+      "score": 420
+    },
+    {
+      "name": "Gjertrud",
+      "score": 420
+    },
+    {
+      "name": "Frøydis",
+      "score": 420
+    },
+    {
+      "name": "Arnfrid",
+      "score": 420
+    },
+    {
+      "name": "Alvhild",
+      "score": 420
+    },
+    {
+      "name": "Åsborg",
+      "score": 420
+    },
+    {
+      "name": "Klara",
+      "score": 410
+    },
+    {
+      "name": "Oline",
+      "score": 400
+    },
+    {
+      "name": "Wanda",
+      "score": 380
+    },
+    {
+      "name": "Gjennom",
+      "score": 380
+    },
+    {
+      "name": "Aino",
+      "score": 380
+    },
+    {
+      "name": "Agate",
+      "score": 360
+    }
   ],
   "ambiguous": [
-    "Arne",
-    "Berg",
-    "Bjørg",
-    "Bjørn",
-    "Brage",
-    "By",
-    "Dag",
-    "Dal",
-    "Egil",
-    "Einar",
-    "Erling",
-    "Even",
-    "Finn",
-    "Frid",
-    "Frode",
-    "Gry",
-    "Halvdan",
-    "Hauk",
-    "Hei",
-    "Helge",
-    "Ivar",
-    "Jan",
-    "Kim",
-    "Kjell",
-    "Leiv",
-    "Lek",
-    "Li",
-    "Lin",
-    "Lina",
-    "Linn",
-    "Lise",
-    "Liv",
-    "Ly",
-    "Lyn",
-    "Magnus",
-    "Mo",
-    "Mona",
-    "Nina",
-    "Odd",
-    "Ole",
-    "Orm",
-    "Per",
-    "Pia",
-    "Ravn",
-    "Rita",
-    "Robin",
-    "Rose",
-    "Sigurd",
-    "Siv",
-    "Sol",
-    "Stein",
-    "Strand",
-    "Tina",
-    "Tine",
-    "Tone",
-    "Tor",
-    "Ulf",
-    "Ulla",
-    "Ulv",
-    "Una",
-    "Unn",
-    "Urd",
-    "Vera",
-    "Vik",
-    "Vår",
-    "Å",
-    "Ås"
+    {
+      "name": "Ole",
+      "score": 2000
+    },
+    {
+      "name": "Arne",
+      "score": 1800
+    },
+    {
+      "name": "Jan",
+      "score": 1700
+    },
+    {
+      "name": "Per",
+      "score": 1600
+    },
+    {
+      "name": "Kjell",
+      "score": 1300
+    },
+    {
+      "name": "Bjørn",
+      "score": 1200
+    },
+    {
+      "name": "Einar",
+      "score": 950
+    },
+    {
+      "name": "Dag",
+      "score": 900
+    },
+    {
+      "name": "Tor",
+      "score": 900
+    },
+    {
+      "name": "Odd",
+      "score": 900
+    },
+    {
+      "name": "Erling",
+      "score": 900
+    },
+    {
+      "name": "Nina",
+      "score": 870
+    },
+    {
+      "name": "Egil",
+      "score": 850
+    },
+    {
+      "name": "Helge",
+      "score": 850
+    },
+    {
+      "name": "Finn",
+      "score": 800
+    },
+    {
+      "name": "Ivar",
+      "score": 800
+    },
+    {
+      "name": "Bjørg",
+      "score": 800
+    },
+    {
+      "name": "Liv",
+      "score": 750
+    },
+    {
+      "name": "Stein",
+      "score": 700
+    },
+    {
+      "name": "Even",
+      "score": 700
+    },
+    {
+      "name": "Kim",
+      "score": 700
+    },
+    {
+      "name": "Robin",
+      "score": 680
+    },
+    {
+      "name": "Tone",
+      "score": 680
+    },
+    {
+      "name": "Mona",
+      "score": 680
+    },
+    {
+      "name": "Frode",
+      "score": 660
+    },
+    {
+      "name": "Ulf",
+      "score": 600
+    },
+    {
+      "name": "Siv",
+      "score": 590
+    },
+    {
+      "name": "Lise",
+      "score": 580
+    },
+    {
+      "name": "Brage",
+      "score": 560
+    },
+    {
+      "name": "Tine",
+      "score": 540
+    },
+    {
+      "name": "Tina",
+      "score": 540
+    },
+    {
+      "name": "Vera",
+      "score": 520
+    },
+    {
+      "name": "Lina",
+      "score": 520
+    },
+    {
+      "name": "Rita",
+      "score": 520
+    },
+    {
+      "name": "Berg",
+      "score": 500
+    },
+    {
+      "name": "Leiv",
+      "score": 500
+    },
+    {
+      "name": "Rose",
+      "score": 500
+    },
+    {
+      "name": "Pia",
+      "score": 500
+    },
+    {
+      "name": "Strand",
+      "score": 480
+    },
+    {
+      "name": "Halvdan",
+      "score": 480
+    },
+    {
+      "name": "Gry",
+      "score": 480
+    },
+    {
+      "name": "Sol",
+      "score": 460
+    },
+    {
+      "name": "Lin",
+      "score": 440
+    },
+    {
+      "name": "Ravn",
+      "score": 420
+    },
+    {
+      "name": "Dal",
+      "score": 420
+    },
+    {
+      "name": "Vår",
+      "score": 420
+    },
+    {
+      "name": "Frid",
+      "score": 420
+    },
+    {
+      "name": "Una",
+      "score": 420
+    },
+    {
+      "name": "Orm",
+      "score": 400
+    },
+    {
+      "name": "Vik",
+      "score": 400
+    },
+    {
+      "name": "Unn",
+      "score": 400
+    },
+    {
+      "name": "Ulv",
+      "score": 380
+    },
+    {
+      "name": "Hauk",
+      "score": 380
+    },
+    {
+      "name": "Mo",
+      "score": 380
+    },
+    {
+      "name": "Lyn",
+      "score": 380
+    },
+    {
+      "name": "Li",
+      "score": 360
+    },
+    {
+      "name": "Rex",
+      "score": 360
+    },
+    {
+      "name": "Pil",
+      "score": 340
+    }
   ],
   "lastNames": [
+    "Aamodt",
+    "Aarnes",
+    "Aarseth",
     "Aas",
     "Aasen",
     "Abrahamsen",
     "Ali",
+    "Alvestad",
+    "Amundsen",
     "Andersen",
     "Andreassen",
     "Antonsen",
+    "Aspheim",
+    "Aune",
+    "Aursand",
     "Austnes",
     "Bakke",
+    "Bakkeli",
     "Bakken",
-    "Bakker",
+    "Bakkerud",
+    "Ballo",
+    "Balsvik",
+    "Bangstad",
+    "Barsnes",
+    "Bauge",
+    "Baumann",
+    "Bech",
+    "Bekken",
+    "Bellika",
     "Berg",
     "Berge",
+    "Bergseng",
+    "Bergsholm",
+    "Bergstad",
     "Bjerke",
+    "Bjørnsen",
     "Bjørnstad",
+    "Blikstad",
     "Blom",
+    "Blytt",
     "Borge",
     "Brattli",
     "Brekke",
+    "Bø",
+    "Bøe",
+    "Bøen",
+    "Børsheim",
     "Christensen",
     "Dahl",
     "Dale",
+    "Dalgard",
+    "Dalheim",
+    "Dalseth",
     "Davidsen",
+    "Drabløs",
+    "Drange",
+    "Drevdal",
+    "Dunker",
+    "Egeland",
+    "Eggum",
     "Eide",
+    "Ekeberg",
+    "Eknes",
+    "Elde",
+    "Ellingsberg",
     "Ellingsen",
+    "Elseth",
     "Elstad",
+    "Endresen",
+    "Engum",
+    "Enstad",
     "Eriksen",
+    "Erikstad",
+    "Espedal",
+    "Espeland",
     "Evensen",
+    "Fagerheim",
+    "Falkeid",
+    "Falnes",
+    "Fandrem",
+    "Faye",
+    "Finstad",
+    "Fiskum",
     "Fjeld",
+    "Fjeldheim",
+    "Fjelstad",
+    "Flaata",
+    "Flaten",
+    "Flesland",
+    "Flo",
+    "Folkestad",
+    "Fonnes",
+    "Fornes",
+    "Foss",
+    "Fossheim",
+    "Fossnes",
+    "Frantzen",
+    "Fredheim",
     "Fredriksen",
+    "Frøland",
+    "Frøseth",
+    "Furnes",
+    "Furset",
+    "Fylling",
+    "Fæhn",
+    "Gabrielsen",
+    "Gausen",
+    "Gilje",
+    "Gjerde",
+    "Gjesdal",
+    "Gjøvik",
+    "Gram",
+    "Granberg",
+    "Granlund",
+    "Granly",
+    "Granmo",
+    "Granum",
+    "Gravdal",
+    "Gravem",
+    "Grenstad",
+    "Grimstad",
+    "Grinde",
+    "Grini",
+    "Grødem",
+    "Grønlie",
+    "Grønmo",
+    "Grønning",
+    "Grønvold",
+    "Guldbrandsen",
+    "Gule",
     "Gundersen",
+    "Gunleiksrud",
+    "Guttormsen",
+    "Haaland",
     "Hagen",
+    "Halden",
+    "Halland",
+    "Halleland",
     "Halvorsen",
+    "Hamar",
+    "Hammer",
+    "Hammerstad",
+    "Haneberg",
+    "Hannevik",
+    "Hannisdal",
     "Hansen",
     "Hanssen",
+    "Haraldsen",
+    "Haraldstad",
+    "Hassel",
+    "Hatland",
     "Hauge",
     "Haugen",
+    "Haugenes",
     "Haugland",
+    "Haugo",
+    "Haugstad",
+    "Haukaas",
+    "Haukeli",
+    "Haukenes",
+    "Haukås",
     "Hegge",
     "Heier",
+    "Heimdal",
+    "Helgesen",
+    "Helland",
+    "Helleland",
+    "Hellesøy",
+    "Hem",
+    "Henden",
     "Henriksen",
+    "Hermansen",
+    "Herrebrøden",
+    "Hestnes",
+    "Hetland",
+    "Hillestad",
+    "Hindbjørgen",
     "Hjelle",
+    "Hjelset",
+    "Hoel",
+    "Hoem",
+    "Hoff",
     "Holm",
+    "Holmberg",
     "Holmen",
+    "Holmgren",
+    "Holstad",
+    "Homdrum",
+    "Hopland",
+    "Horn",
+    "Horten",
+    "Hovde",
+    "Hovik",
+    "Hovland",
+    "Hunnes",
     "Huse",
+    "Huseby",
+    "Husnes",
+    "Hustad",
+    "Hvam",
+    "Hvidsten",
+    "Høgset",
+    "Hønsen",
+    "Høstmark",
+    "Høyland",
+    "Indrebø",
+    "Ingvaldsen",
+    "Iren",
     "Isaksen",
     "Jacobsen",
+    "Jahren",
+    "Jakhelln",
     "Jakobsen",
     "Jensen",
+    "Jenssen",
     "Johannessen",
     "Johansen",
     "Johnsen",
+    "Justad",
     "Jørgensen",
+    "Jøsendal",
+    "Kaasa",
+    "Kallevik",
+    "Kalstad",
+    "Kamsvåg",
     "Karlsen",
+    "Karlstad",
+    "Karterud",
+    "Kinn",
+    "Kirkebø",
+    "Kirknes",
     "Kise",
+    "Kjeldsberg",
+    "Kjeldsen",
+    "Kjøde",
+    "Kjølås",
+    "Kjøs",
+    "Klaussen",
+    "Kleiven",
+    "Klepp",
+    "Kleveland",
+    "Kleven",
+    "Klevjer",
+    "Klokk",
+    "Klokkerstuen",
     "Knudsen",
     "Kristiansen",
     "Kristoffersen",
+    "Kvale",
+    "Kvalheim",
+    "Kvalsvik",
+    "Kvam",
     "Larsen",
     "Lie",
     "Lien",
@@ -516,7 +2092,6 @@
     "Nordby",
     "Nygaard",
     "Nygård",
-    "Nørgaard",
     "Olsen",
     "Ottersen",
     "Paulsen",
@@ -525,18 +2100,16 @@
     "Rasmussen",
     "Reitan",
     "Risan",
-    "Rø",
     "Rød",
     "Rønning",
     "Rønningen",
     "Sandvik",
     "Sivertsen",
-    "Skjæret",
     "Skogen",
     "Solberg",
+    "Solheim",
     "Stensrud",
     "Strand",
-    "Støre",
     "Svendsen",
     "Sæbø",
     "Sæther",
@@ -548,9 +2121,7 @@
     "Thorvaldsen",
     "Tveit",
     "Vatne",
-    "Viken",
     "Vold",
-    "Westgaard",
     "Wold",
     "Wolden",
     "Ødegaard"
