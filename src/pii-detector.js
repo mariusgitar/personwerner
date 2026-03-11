@@ -212,7 +212,7 @@ function detectCapitalizedPairPII(text, certainNames) {
 
 function detectContextualNamePII(text, certainNames) {
   const contextRegex =
-    /\b(?:heter|møtte|sa|ifølge|kontaktet|rådgiver|saksbehandler|kontaktperson|snakket\s+med)\s+([A-ZÆØÅ][\p{L}'-]*(?:\s+[A-ZÆØÅ][\p{L}'-]*)?)\b/gu
+    /\b(?:[Hh]eter|[Mm]øtte|[Ss]a|[Ii]følge|[Kk]ontaktet|[Rr]ådgiver|[Ss]aksbehandler|[Kk]ontaktperson|[Ss]nakket\s+[Mm]ed)\s+([\p{Lu}][\p{L}'-]*(?:\s+[\p{Lu}][\p{L}'-]*)?)\b/gu
 
   const matches = []
   let found
