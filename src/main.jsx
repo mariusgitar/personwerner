@@ -45,8 +45,20 @@ const PLACEHOLDERS = {
   name: '[NAVN]'
 }
 
-const AMBIGUOUS_NAMES = new Set(namesData.ambiguous.map((entry) => entry.name.toLowerCase()))
-const LAST_NAMES = new Set(namesData.lastNames.map((entry) => entry.name.toLowerCase()))
+function getNameValue(entry) {
+  if (typeof entry === 'string') return entry
+  return entry?.name ?? ''
+}
+
+function getNameScore(entry) {
+  if (typeof entry === 'object' && entry !== null) {
+    return entry.score ?? Number.NEGATIVE_INFINITY
+  }
+  return Number.NEGATIVE_INFINITY
+}
+
+const AMBIGUOUS_NAMES = new Set(namesData.ambiguous.map((entry) => getNameValue(entry).toLowerCase()).filter(Boolean))
+const LAST_NAMES = new Set(namesData.lastNames.map((entry) => getNameValue(entry).toLowerCase()).filter(Boolean))
 
 const defaultAction = ACTIONS.placeholder
 
@@ -308,7 +320,13 @@ function App() {
   const [ignoredYellow, setIgnoredYellow] = useState(new Set())
 
   const certainNames = useMemo(
-    () => new Set(namesData.certain.filter((entry) => entry.score >= nameSensitivity).map((entry) => entry.name.toLowerCase())),
+    () =>
+      new Set(
+        namesData.certain
+          .filter((entry) => getNameScore(entry) >= nameSensitivity)
+          .map((entry) => getNameValue(entry).toLowerCase())
+          .filter(Boolean)
+      ),
     [nameSensitivity]
   )
 
