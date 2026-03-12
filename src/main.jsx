@@ -7,7 +7,6 @@ import './index.css'
 import { detectPII, getNameScore } from './pii-detector'
 
 const ACTIONS = {
-  mark: 'mark',
   remove: 'remove',
   pseudonymize: 'pseudonymize'
 }
@@ -143,10 +142,6 @@ function transformText(text, matches, action) {
 
   matches.forEach((match) => {
     output += text.slice(cursor, match.start)
-    if (action === ACTIONS.mark) {
-      output += text.slice(match.start, match.end)
-    }
-
     cursor = match.end
   })
 
@@ -459,6 +454,10 @@ function App() {
               placeholder="PersonWerner er klar til jobb. Last opp en fil eller lim inn tekst."
               className="h-56 w-full rounded-lg border border-slate-300 p-3 font-mono text-sm"
             />
+            <p className="mt-3 text-xs text-slate-500">
+              Werner leser teksten din lokalt i nettleseren. Ingen data sendes til servere, skyer eller Werner selv. Han er
+              litt gammeldags sånn. 🖥️
+            </p>
             {loading && <p className="mt-2 text-sm font-medium text-blue-700">Werner er på saken...</p>}
             {fileError && <p className="mt-2 text-sm font-medium text-red-700">{fileError}</p>}
 
@@ -493,6 +492,10 @@ function App() {
             <h2 className="text-2xl font-semibold">Gå gjennom</h2>
             <p className="mt-2 text-sm text-slate-700">
               Werner fant <strong>{highConfidenceCount}</strong> sannsynlige og <strong>{uncertainCount}</strong> usikre treff
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Rødt = Werner er ganske sikker. Gult = Werner er usikker – du bestemmer. Ser du noe som mangler? Marker
+              teksten selv og klikk '+ Legg til'.
             </p>
 
             <div
@@ -599,16 +602,13 @@ function App() {
         {currentStep === 3 && analysisRan && (
           <section className="rounded-xl bg-white p-5 shadow">
             <h2 className="text-2xl font-semibold">Eksporter</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Velg hva som skal skje med all bekreftet persondata, last ned og du er i mål. Husk å lese gjennom én gang til
+              – Werner er flink, men ikke ufeilbarlig. 🤓
+            </p>
             <p className="mt-2 text-lg font-medium">Hva vil du gjøre med persondata?</p>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              <button
-                type="button"
-                onClick={() => setGlobalAction(ACTIONS.mark)}
-                className="rounded-lg border border-slate-300 px-4 py-4 text-base font-semibold hover:bg-slate-50"
-              >
-                Marker
-              </button>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => setGlobalAction(ACTIONS.remove)}
