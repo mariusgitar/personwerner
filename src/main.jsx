@@ -9,15 +9,13 @@ import { detectPII, getNameScore } from './pii-detector'
 const ACTIONS = {
   mark: 'mark',
   remove: 'remove',
-  placeholder: 'placeholder',
   pseudonymize: 'pseudonymize'
 }
 
 const SENSITIVITY_LEVELS = [
-  { label: 'Søk blant de 100 vanligste navnene', threshold: 700 },
-  { label: 'Søk blant de 300 vanligste navnene', threshold: 500 },
-  { label: 'Søk blant de 500 vanligste navnene', threshold: 300 },
-  { label: 'Søk blant alle kjente navn', threshold: 100 }
+  { label: 'Rask', threshold: 700 },
+  { label: 'Standard', threshold: 500 },
+  { label: 'Grundig', threshold: 300 }
 ]
 
 const DEFAULT_SENSITIVITY = 500
@@ -27,17 +25,7 @@ function getNameValue(entry) {
   return entry?.name ?? ''
 }
 
-const defaultAction = ACTIONS.placeholder
-
-const LABELS = {
-  fnr: 'Fødselsnummer',
-  dnr: 'D-nummer',
-  phone: 'Telefon',
-  email: 'E-post',
-  date: 'Dato',
-  name: 'Navn'
-}
-
+const defaultAction = ''
 
 const PLACEHOLDERS = {
   fnr: '[FØDSELSNUMMER]',
@@ -144,7 +132,7 @@ function pseudonymizeText(text, matches) {
 
 function transformText(text, matches, action) {
   if (!text) return { text: '', legend: [] }
-  if (!matches.length) return { text, legend: [] }
+  if (!matches.length || !action) return { text, legend: [] }
 
   if (action === ACTIONS.pseudonymize) {
     return pseudonymizeText(text, matches)
@@ -157,8 +145,6 @@ function transformText(text, matches, action) {
     output += text.slice(cursor, match.start)
     if (action === ACTIONS.mark) {
       output += text.slice(match.start, match.end)
-    } else if (action === ACTIONS.placeholder) {
-      output += PLACEHOLDERS[match.piiType]
     }
 
     cursor = match.end
@@ -192,6 +178,10 @@ function App() {
   const [fileError, setFileError] = useState('')
   const [globalAction, setGlobalAction] = useState(defaultAction)
   const [nameSensitivity, setNameSensitivity] = useState(DEFAULT_SENSITIVITY)
+  const [analysisRan, setAnalysisRan] = useState(false)
+  const [hasReviewed, setHasReviewed] = useState(false)
+  const [analyzedText, setAnalyzedText] = useState('')
+  const [analyzedSensitivity, setAnalyzedSensitivity] = useState(DEFAULT_SENSITIVITY)
   const [ignoredYellow, setIgnoredYellow] = useState(new Set())
   const [manualMatches, setManualMatches] = useState([])
   const [selectionCandidate, setSelectionCandidate] = useState(null)
@@ -201,14 +191,14 @@ function App() {
     () =>
       new Set(
         namesData.certain
-          .filter((entry) => getNameScore(entry) >= nameSensitivity)
+          .filter((entry) => getNameScore(entry) >= analyzedSensitivity)
           .map((entry) => getNameValue(entry).toLowerCase())
           .filter(Boolean)
       ),
-    [nameSensitivity]
+    [analyzedSensitivity]
   )
 
-  const allMatches = useMemo(() => detectPII(inputText, certainNames), [inputText, certainNames])
+  const allMatches = useMemo(() => detectPII(analyzedText, certainNames), [analyzedText, certainNames])
 
   const filteredMatches = useMemo(
     () => allMatches.filter((match) => !(match.confidence === 'ambiguous' && ignoredYellow.has(match.value.toLowerCase()))),
@@ -228,7 +218,6 @@ function App() {
         const key = match.value.toLowerCase()
         bucket.set(key, {
           value: match.value,
-          label: match.reviewLabel,
           count: (bucket.get(key)?.count ?? 0) + 1,
           ignored: ignoredYellow.has(key)
         })
@@ -237,7 +226,10 @@ function App() {
     return [...bucket.values()]
   }, [allMatches, ignoredYellow])
 
-  const transformedResult = useMemo(() => transformText(inputText, confirmedMatches, globalAction), [inputText, confirmedMatches, globalAction])
+  const transformedResult = useMemo(
+    () => transformText(analyzedText, confirmedMatches, globalAction),
+    [analyzedText, confirmedMatches, globalAction]
+  )
 
   const formattedLegend = useMemo(() => formatLegend(transformedResult.legend), [transformedResult.legend])
 
@@ -250,9 +242,13 @@ function App() {
 
   const resetInputText = (nextValue) => {
     setInputText(nextValue)
+    setAnalysisRan(false)
+    setHasReviewed(false)
+    setGlobalAction(defaultAction)
     setManualMatches([])
     setSelectionCandidate(null)
     setFileError('')
+    setIgnoredYellow(new Set())
   }
 
   useEffect(() => {
@@ -333,8 +329,7 @@ function App() {
         const workbook = XLSX.read(buffer, { type: 'array' })
         const sheetsText = workbook.SheetNames.map((sheetName) => XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]))
         resetInputText(sheetsText.join('\n'))
-      }
-      else {
+      } else {
         setFileError('Werner klarte ikke å lese filen. Prøv et annet format, eller lim inn teksten direkte.')
       }
     } catch {
@@ -345,7 +340,9 @@ function App() {
     }
   }
 
-  const noMatches = inputText && confirmedMatches.length === 0
+  const highConfidenceCount = confirmedMatches.filter((match) => match.confidence === 'high').length
+  const uncertainCount = filteredMatches.filter((match) => match.confidence === 'ambiguous').length
+  const noMatches = analysisRan && analyzedText && confirmedMatches.length === 0
 
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900">
@@ -382,34 +379,32 @@ function App() {
           </section>
         </div>
       )}
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-        <header>
-          <h1 className="text-3xl font-bold">PersonWerner</h1>
-          <p className="mt-2 text-lg text-slate-800">Werner verner – og fjerner. Men du er sjefen.</p>
-          <p className="mt-2 max-w-3xl text-slate-700">
-            PersonWerner hjelper deg å finne persondata raskt. Verktøyet gjør det tunge løftet, men du må ta den
-            endelige vurderingen selv. Regn med å finne ~95% – resten er ditt faglige skjønn.
-          </p>
+
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8">
+        <header className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-lg font-bold text-white">W</div>
+          <div>
+            <h1 className="text-3xl font-bold">PersonWerner</h1>
+            <p className="text-base text-slate-700">Werner verner – og fjerner. Men du er sjefen.</p>
+          </div>
         </header>
 
         <section className="rounded-xl bg-white p-4 shadow">
           <details>
-            <summary className="cursor-pointer text-base font-semibold">Slik bruker du Werner 👇</summary>
-            <div className="mt-3 text-sm text-slate-700">
-              <p>1. Last opp en fil eller lim inn tekst</p>
-              <p>2. Werner markerer sannsynlig persondata i rødt, og usikre treff i gult</p>
-              <p>3. Gå gjennom de gule – avgjør selv hva som er navn</p>
-              <p>4. Merk eventuelle navn Werner gikk glipp av manuelt</p>
-              <p>5. Velg hva som skal skje med persondata: marker, fjern eller pseudonymiser</p>
-              <p>6. Last ned den rensede teksten</p>
+            <summary className="cursor-pointer text-lg font-semibold">Slik bruker du Werner</summary>
+            <div className="mt-3 space-y-2 text-xs text-slate-500">
+              <p>1. Last opp fil eller lim inn tekst</p>
+              <p>2. Velg ønsket grundighet og kjør analyse</p>
+              <p>3. Se gjennom funnene og kryss av hva som bør sjekkes</p>
+              <p>4. Velg tiltak og last ned resultatet</p>
             </div>
           </details>
         </section>
 
         <section className="rounded-xl bg-white p-4 shadow">
-          <p className="mb-3 text-sm text-slate-600">Last opp CSV, XLSX eller TXT</p>
+          <p className="mb-3 text-xs text-slate-500">Last opp CSV, XLSX eller TXT</p>
           <input type="file" accept=".csv,.xlsx,.txt" onChange={handleFileUpload} className="mb-4 block w-full" />
-          <p className="mb-2 text-sm text-slate-600">...eller lim inn tekst</p>
+          <p className="mb-2 text-xs text-slate-500">...eller lim inn tekst</p>
           <textarea
             value={inputText}
             onChange={(event) => resetInputText(event.target.value)}
@@ -420,7 +415,7 @@ function App() {
           {fileError && <p className="mt-2 text-sm font-medium text-red-700">{fileError}</p>}
 
           <label className="mt-4 flex flex-col gap-1 text-sm">
-            <span className="font-medium text-slate-700">Sensitivitet – hvor mange navn skal Werner lete etter?</span>
+            <span className="font-medium text-slate-700">Grundighet</span>
             <select
               value={nameSensitivity}
               onChange={(event) => setNameSensitivity(Number.parseInt(event.target.value, 10))}
@@ -433,176 +428,209 @@ function App() {
               ))}
             </select>
           </label>
+
+          <button
+            type="button"
+            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+            disabled={!inputText.trim()}
+            onClick={() => {
+              setAnalyzedText(inputText)
+              setAnalyzedSensitivity(nameSensitivity)
+              setAnalysisRan(true)
+              setHasReviewed(false)
+              setIgnoredYellow(new Set())
+              setManualMatches([])
+              setSelectionCandidate(null)
+              setGlobalAction(defaultAction)
+            }}
+          >
+            Analyser tekst →
+          </button>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-3">
-          <article className="rounded-xl bg-white p-4 shadow lg:col-span-2">
-            <h2 className="mb-3 text-xl font-semibold">Funn og markering</h2>
-            <p className="mb-3 text-sm text-slate-600">
-              <span className="mr-3 inline-flex items-center gap-2"><span className="inline-block h-3 w-3 rounded bg-red-200" />Sannsynlig persondata</span>
-              <span className="inline-flex items-center gap-2"><span className="inline-block h-3 w-3 rounded bg-yellow-200" />Bør vurderes</span>
-            </p>
-            <p className="mb-3 text-sm text-slate-600">Gikk Werner glipp av noe? Merk teksten selv, så legger du det til.</p>
-            {inputText && (
-              <p className="mb-3 inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
-                Werner fant {confirmedMatches.length} treff
+        {analysisRan && (
+          <section className="space-y-6">
+            <article className="rounded-xl bg-white p-4 shadow">
+              <p className="mb-4 rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-800">
+                Werner fant {highConfidenceCount} sannsynlige og {uncertainCount} usikre treff
               </p>
-            )}
-            <div
-              ref={resultsRef}
-              className="rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words leading-relaxed"
-            >
-              {inputText ? (
-                renderHighlightedText(inputText, confirmedMatches)
-              ) : (
-                <p className="text-slate-500">PersonWerner er klar til jobb. Last opp en fil eller lim inn tekst.</p>
+              <div
+                ref={resultsRef}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words leading-relaxed"
+              >
+                {analyzedText ? (
+                  renderHighlightedText(analyzedText, confirmedMatches)
+                ) : (
+                  <p className="text-slate-500">PersonWerner er klar til jobb. Last opp en fil eller lim inn tekst.</p>
+                )}
+              </div>
+
+              {selectionCandidate && (
+                <button
+                  type="button"
+                  style={{ top: selectionCandidate.top, left: selectionCandidate.left, transform: 'translateX(-50%)' }}
+                  className="fixed z-20 rounded-full bg-red-700 px-3 py-1 text-xs font-semibold text-white shadow-lg"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    setManualMatches((prev) => [
+                      ...prev,
+                      {
+                        value: selectionCandidate.text,
+                        start: selectionCandidate.start,
+                        end: selectionCandidate.end,
+                        confidence: 'high',
+                        piiType: 'manual',
+                        manual: true
+                      }
+                    ])
+                    setSelectionCandidate(null)
+                    window.getSelection()?.removeAllRanges()
+                    setHasReviewed(true)
+                  }}
+                >
+                  + Merk som persondata
+                </button>
               )}
-            </div>
-            {selectionCandidate && (
+
+              {noMatches && (
+                <p className="mt-3 rounded bg-emerald-50 p-3 text-emerald-800">
+                  Ingen persondata funnet. Enten er dokumentet rent, eller så er Werner litt for optimistisk i dag.
+                  Sjekk gjerne manuelt også. 🎉
+                </p>
+              )}
+
+              <h2 className="mt-5 text-base font-semibold">Bør sjekkes</h2>
+              <div className="mt-2 space-y-2">
+                {reviewItems.length === 0 ? (
+                  <p className="text-xs text-slate-500">Ingen usikre treff.</p>
+                ) : (
+                  reviewItems.map((item) => (
+                    <label key={item.value.toLowerCase()} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={!item.ignored}
+                        onChange={() => {
+                          setIgnoredYellow((prev) => {
+                            const next = new Set(prev)
+                            const key = item.value.toLowerCase()
+                            if (next.has(key)) {
+                              next.delete(key)
+                            } else {
+                              next.add(key)
+                            }
+                            return next
+                          })
+                          setHasReviewed(true)
+                        }}
+                      />
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-1">
+                        {item.value} ({item.count})
+                      </span>
+                    </label>
+                  ))
+                )}
+              </div>
+
               <button
                 type="button"
-                style={{ top: selectionCandidate.top, left: selectionCandidate.left, transform: 'translateX(-50%)' }}
-                className="fixed z-20 rounded-full bg-red-700 px-3 py-1 text-xs font-semibold text-white shadow-lg"
-                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => {
-                  setManualMatches((prev) => [
-                    ...prev,
-                    {
-                      value: selectionCandidate.text,
-                      start: selectionCandidate.start,
-                      end: selectionCandidate.end,
-                      confidence: 'high',
-                      piiType: 'manual',
-                      manual: true
-                    }
-                  ])
-                  setSelectionCandidate(null)
-                  window.getSelection()?.removeAllRanges()
+                  resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  setHasReviewed(true)
                 }}
+                className="mt-3 text-xs text-blue-700 underline"
               >
-                + Merk som persondata
+                + Legg til navn Werner gikk glipp av
               </button>
-            )}
-            {noMatches && (
-              <p className="mt-3 rounded bg-emerald-50 p-3 text-emerald-800">
-                Ingen persondata funnet. Enten er dokumentet rent, eller så er Werner litt for optimistisk i dag.
-                Sjekk gjerne manuelt også. 🎉
-              </p>
-            )}
-          </article>
 
-          <aside className="rounded-xl bg-white p-4 shadow">
-            <h2 className="text-xl font-semibold">Bør sjekkes</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Disse ordene kan være personnavn – men Werner er ikke sikker. Du bestemmer. Avflagg det som ikke er navn.
-            </p>
-            <div className="mt-3 space-y-2">
-              {reviewItems.length === 0 ? (
-                <p className="text-sm text-slate-500">Ingen tvetydige treff foreløpig.</p>
-              ) : (
-                reviewItems.map((item) => (
-                  <label key={item.value.toLowerCase()} className="flex items-center justify-between gap-2 rounded border p-2">
-                    <span>
-                      {item.value} <span className="text-xs text-slate-500">({item.count})</span>
-                      {item.label && <span className="ml-2 text-xs text-slate-500">{item.label}</span>}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={!item.ignored}
-                      onChange={() => {
-                        setIgnoredYellow((prev) => {
-                          const next = new Set(prev)
-                          const key = item.value.toLowerCase()
-                          if (next.has(key)) {
-                            next.delete(key)
-                          } else {
-                            next.add(key)
-                          }
-                          return next
-                        })
-                      }}
-                    />
-                  </label>
-                ))
-              )}
-            </div>
-          </aside>
-        </section>
-
-        <section className="rounded-xl bg-white p-4 shadow">
-          <h2 className="text-xl font-semibold">Tiltak for bekreftet persondata</h2>
-          <div className="mt-3 max-w-xl">
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Hva vil du gjøre med bekreftet persondata?</span>
-              <select
-                value={globalAction}
-                onChange={(event) => setGlobalAction(event.target.value)}
-                className="rounded border border-slate-300 p-2"
-              >
-                <option value={ACTIONS.mark}>Marker</option>
-                <option value={ACTIONS.remove}>Fjern</option>
-                <option value={ACTIONS.placeholder}>Erstatt med plassholder</option>
-                <option value={ACTIONS.pseudonymize}>Pseudonymiser</option>
-              </select>
-            </label>
-          </div>
-
-          <p className="mt-3 text-xs text-slate-500">
-            Gjelder: {Object.values(LABELS).join(', ')}.
-          </p>
-
-          <div className="mt-4">
-            <h3 className="font-semibold">Resultat</h3>
-            <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words text-sm">
-              {transformedResult.text || 'Ingen tekst å vise enda.'}
-            </pre>
-            {inputText && confirmedMatches.length > 0 && (
-              <p className="mt-2 text-sm text-emerald-700">Ferdig behandlet. Husk å lese gjennom før du deler. 👀</p>
-            )}
-
-            {globalAction === ACTIONS.pseudonymize && transformedResult.legend.length > 0 && (
-              <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
-                <p className="text-slate-700">{formattedLegend}</p>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={() => setHasReviewed(true)}
+                  className="rounded border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
+                >
+                  Jeg har gjennomgått treffene
+                </button>
               </div>
+            </article>
+
+            {hasReviewed && (
+              <section className="rounded-xl bg-white p-4 shadow">
+                <h2 className="text-2xl font-semibold">Hva vil du gjøre med persondata?</h2>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <button
+                    type="button"
+                    onClick={() => setGlobalAction(ACTIONS.mark)}
+                    className="rounded-lg border border-slate-300 px-4 py-3 text-base font-semibold hover:bg-slate-50"
+                  >
+                    Marker
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGlobalAction(ACTIONS.remove)}
+                    className="rounded-lg border border-slate-300 px-4 py-3 text-base font-semibold hover:bg-slate-50"
+                  >
+                    Fjern
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGlobalAction(ACTIONS.pseudonymize)}
+                    className="rounded-lg border border-slate-300 px-4 py-3 text-base font-semibold hover:bg-slate-50"
+                  >
+                    Pseudonymiser
+                  </button>
+                </div>
+
+                <div className="mt-4">
+                  <h3 className="font-semibold">Resultat</h3>
+                  <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words text-sm">
+                    {globalAction ? transformedResult.text : 'Velg et tiltak for å se resultatet.'}
+                  </pre>
+                </div>
+
+                {globalAction === ACTIONS.pseudonymize && transformedResult.legend.length > 0 && (
+                  <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
+                    <p className="text-slate-700">{formattedLegend}</p>
+                  </div>
+                )}
+
+                {globalAction && (
+                  <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const txtContent =
+                          globalAction === ACTIONS.pseudonymize && formattedLegend
+                            ? `${transformedResult.text}\n\n${formattedLegend}`
+                            : transformedResult.text
+
+                        downloadBlob(txtContent, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')
+                      }}
+                      className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
+                    >
+                      Last ned TXT
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const rows = [{ resultat: transformedResult.text }]
+
+                        if (globalAction === ACTIONS.pseudonymize && formattedLegend) {
+                          rows.push({ resultat: formattedLegend })
+                        }
+
+                        const csv = Papa.unparse(rows)
+                        downloadBlob(csv, 'personwerner-resultat.csv', 'text/csv;charset=utf-8')
+                      }}
+                      className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
+                    >
+                      Last ned CSV
+                    </button>
+                  </div>
+                )}
+              </section>
             )}
-          </div>
-
-          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
-            <p className="w-full text-sm text-slate-600">
-              Husk: du har faglig ansvar for den endelige vurderingen. Werner er et hjelpemiddel, ikke en automasjon.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                const txtContent =
-                  globalAction === ACTIONS.pseudonymize && formattedLegend
-                    ? `${transformedResult.text}\n\n${formattedLegend}`
-                    : transformedResult.text
-
-                downloadBlob(txtContent, 'personwerner-resultat.txt', 'text/plain;charset=utf-8')
-              }}
-              className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
-            >
-              Last ned TXT
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                const rows = [{ resultat: transformedResult.text }]
-
-                if (globalAction === ACTIONS.pseudonymize && formattedLegend) {
-                  rows.push({ resultat: formattedLegend })
-                }
-
-                const csv = Papa.unparse(rows)
-                downloadBlob(csv, 'personwerner-resultat.csv', 'text/csv;charset=utf-8')
-              }}
-              className="w-full rounded bg-slate-900 px-3 py-2 text-sm font-medium text-white sm:w-auto"
-            >
-              Last ned CSV
-            </button>
-          </div>
-        </section>
+          </section>
+        )}
 
         <footer className="pb-2 text-center text-sm text-slate-600">
           PersonWerner behandler ingen data. Alt skjer i nettleseren din. 🔒
