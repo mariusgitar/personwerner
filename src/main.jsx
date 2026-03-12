@@ -46,7 +46,7 @@ const PLACEHOLDERS = {
   email: '[E-POST]',
   date: '[DATO]',
   name: '[NAVN]',
-  manual: '[PII]'
+  manual: '[PERSONDATA]'
 }
 
 function renderHighlightedText(text, matches) {
@@ -188,6 +188,7 @@ function downloadBlob(content, filename, mimeType) {
 function App() {
   const [inputText, setInputText] = useState('')
   const [loading, setLoading] = useState(false)
+  const [fileError, setFileError] = useState('')
   const [globalAction, setGlobalAction] = useState(defaultAction)
   const [nameSensitivity, setNameSensitivity] = useState(DEFAULT_SENSITIVITY)
   const [ignoredYellow, setIgnoredYellow] = useState(new Set())
@@ -243,6 +244,7 @@ function App() {
     setInputText(nextValue)
     setManualMatches([])
     setSelectionCandidate(null)
+    setFileError('')
   }
 
   useEffect(() => {
@@ -303,6 +305,7 @@ function App() {
     if (!file) return
 
     setLoading(true)
+    setFileError('')
     try {
       const extension = file.name.split('.').pop()?.toLowerCase()
 
@@ -323,6 +326,11 @@ function App() {
         const sheetsText = workbook.SheetNames.map((sheetName) => XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]))
         resetInputText(sheetsText.join('\n'))
       }
+      else {
+        setFileError('Werner klarte ikke å lese filen. Prøv et annet format, eller lim inn teksten direkte.')
+      }
+    } catch {
+      setFileError('Werner klarte ikke å lese filen. Prøv et annet format, eller lim inn teksten direkte.')
     } finally {
       setLoading(false)
       event.target.value = ''
@@ -336,8 +344,26 @@ function App() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
         <header>
           <h1 className="text-3xl font-bold">PersonWerner</h1>
-          <p className="mt-2 text-slate-700">PII-deteksjon for kommunehelter. Alt skjer i nettleseren din.</p>
+          <p className="mt-2 text-lg text-slate-800">Werner verner – og fjerner. Men du er sjefen.</p>
+          <p className="mt-2 max-w-3xl text-slate-700">
+            PersonWerner hjelper deg å finne persondata raskt. Verktøyet gjør det tunge løftet, men du må ta den
+            endelige vurderingen selv. Regn med å finne ~95% – resten er ditt faglige skjønn.
+          </p>
         </header>
+
+        <section className="rounded-xl bg-white p-4 shadow">
+          <details>
+            <summary className="cursor-pointer text-base font-semibold">Slik bruker du Werner 👇</summary>
+            <div className="mt-3 text-sm text-slate-700">
+              <p>1. Last opp en fil eller lim inn tekst</p>
+              <p>2. Werner markerer sannsynlig persondata i rødt, og usikre treff i gult</p>
+              <p>3. Gå gjennom de gule – avgjør selv hva som er navn</p>
+              <p>4. Merk eventuelle navn Werner gikk glipp av manuelt</p>
+              <p>5. Velg hva som skal skje med persondata: marker, fjern eller pseudonymiser</p>
+              <p>6. Last ned den rensede teksten</p>
+            </div>
+          </details>
+        </section>
 
         <section className="rounded-xl bg-white p-4 shadow">
           <p className="mb-3 text-sm text-slate-600">Last opp CSV, XLSX eller TXT</p>
@@ -349,7 +375,8 @@ function App() {
             placeholder="PersonWerner er klar til jobb. Last opp en fil eller lim inn tekst."
             className="h-40 w-full rounded-lg border border-slate-300 p-3 font-mono text-sm"
           />
-          {loading && <p className="mt-2 text-sm font-medium text-blue-700">Werner jobber...</p>}
+          {loading && <p className="mt-2 text-sm font-medium text-blue-700">Werner er på saken...</p>}
+          {fileError && <p className="mt-2 text-sm font-medium text-red-700">{fileError}</p>}
 
           <label className="mt-4 flex flex-col gap-1 text-sm">
             <span className="font-medium text-slate-700">Sensitivitet – hvor mange navn skal Werner lete etter?</span>
@@ -370,6 +397,11 @@ function App() {
         <section className="grid gap-6 lg:grid-cols-3">
           <article className="rounded-xl bg-white p-4 shadow lg:col-span-2">
             <h2 className="mb-3 text-xl font-semibold">Funn og markering</h2>
+            <p className="mb-3 text-sm text-slate-600">
+              <span className="mr-3 inline-flex items-center gap-2"><span className="inline-block h-3 w-3 rounded bg-red-200" />Sannsynlig persondata</span>
+              <span className="inline-flex items-center gap-2"><span className="inline-block h-3 w-3 rounded bg-yellow-200" />Bør vurderes</span>
+            </p>
+            <p className="mb-3 text-sm text-slate-600">Gikk Werner glipp av noe? Merk teksten selv, så legger du det til.</p>
             {inputText && (
               <p className="mb-3 inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
                 Werner fant {confirmedMatches.length} treff
@@ -407,18 +439,22 @@ function App() {
                   window.getSelection()?.removeAllRanges()
                 }}
               >
-                + Merk som PII
+                + Merk som persondata
               </button>
             )}
             {noMatches && (
               <p className="mt-3 rounded bg-emerald-50 p-3 text-emerald-800">
-                Ingen tvetydige treff foreløpig.
+                Ingen persondata funnet. Enten er dokumentet rent, eller så er Werner litt for optimistisk i dag.
+                Sjekk gjerne manuelt også. 🎉
               </p>
             )}
           </article>
 
           <aside className="rounded-xl bg-white p-4 shadow">
-            <h2 className="text-xl font-semibold">Gul-liste (trenger review)</h2>
+            <h2 className="text-xl font-semibold">Bør sjekkes</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Disse ordene kan være personnavn – men Werner er ikke sikker. Du bestemmer. Avflagg det som ikke er navn.
+            </p>
             <div className="mt-3 space-y-2">
               {reviewItems.length === 0 ? (
                 <p className="text-sm text-slate-500">Ingen tvetydige treff foreløpig.</p>
@@ -453,10 +489,10 @@ function App() {
         </section>
 
         <section className="rounded-xl bg-white p-4 shadow">
-          <h2 className="text-xl font-semibold">Tiltak for bekreftet PII</h2>
+          <h2 className="text-xl font-semibold">Tiltak for bekreftet persondata</h2>
           <div className="mt-3 max-w-xl">
             <label className="flex flex-col gap-1 text-sm">
-              <span className="font-medium text-slate-700">Hva vil du gjøre med all bekreftet PII?</span>
+              <span className="font-medium text-slate-700">Hva vil du gjøre med bekreftet persondata?</span>
               <select
                 value={globalAction}
                 onChange={(event) => setGlobalAction(event.target.value)}
@@ -479,6 +515,9 @@ function App() {
             <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 whitespace-pre-wrap break-words text-sm">
               {transformedResult.text || 'Ingen tekst å vise enda.'}
             </pre>
+            {inputText && confirmedMatches.length > 0 && (
+              <p className="mt-2 text-sm text-emerald-700">Ferdig behandlet. Husk å lese gjennom før du deler. 👀</p>
+            )}
 
             {globalAction === ACTIONS.pseudonymize && transformedResult.legend.length > 0 && (
               <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
@@ -488,6 +527,9 @@ function App() {
           </div>
 
           <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
+            <p className="w-full text-sm text-slate-600">
+              Husk: du har faglig ansvar for den endelige vurderingen. Werner er et hjelpemiddel, ikke en automasjon.
+            </p>
             <button
               type="button"
               onClick={() => {
@@ -520,6 +562,10 @@ function App() {
             </button>
           </div>
         </section>
+
+        <footer className="pb-2 text-center text-sm text-slate-600">
+          PersonWerner behandler ingen data. Alt skjer i nettleseren din. 🔒
+        </footer>
       </div>
     </main>
   )
