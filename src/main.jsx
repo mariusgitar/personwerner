@@ -445,16 +445,16 @@ function App() {
         {currentStep === 1 && (
           <section className="rounded-xl bg-white p-5 shadow">
             <h2 className="text-2xl font-semibold">Last opp</h2>
-            <p className="mb-3 mt-1 text-xs text-slate-500">Last opp CSV, XLSX eller TXT</p>
+            <p className="helper-text mb-3 mt-1">Last opp CSV, XLSX eller TXT</p>
             <input type="file" accept=".csv,.xlsx,.txt" onChange={handleFileUpload} className="mb-4 block w-full" />
-            <p className="mb-2 text-xs text-slate-500">...eller lim inn tekst</p>
+            <p className="helper-text mb-2">...eller lim inn tekst</p>
             <textarea
               value={inputText}
               onChange={(event) => resetInputText(event.target.value)}
               placeholder="PersonWerner er klar til jobb. Last opp en fil eller lim inn tekst."
               className="h-56 w-full rounded-lg border border-slate-300 p-3 font-mono text-sm"
             />
-            <p className="mt-3 text-xs text-slate-500">
+            <p className="helper-text mt-3">
               Werner leser teksten din lokalt i nettleseren. Ingen data sendes til servere, skyer eller Werner selv. Han er
               litt gammeldags sånn. 🖥️
             </p>
@@ -490,10 +490,10 @@ function App() {
         {currentStep === 2 && analysisRan && (
           <section className="rounded-xl bg-white p-5 shadow">
             <h2 className="text-2xl font-semibold">Gå gjennom</h2>
-            <p className="mt-2 text-sm text-slate-700">
+            <p className="helper-text mt-2">
               Werner fant <strong>{highConfidenceCount}</strong> sannsynlige og <strong>{uncertainCount}</strong> usikre treff
             </p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="helper-text mt-2">
               Rødt = Werner er ganske sikker. Gult = Werner er usikker – du bestemmer. Ser du noe som mangler? Marker
               teksten selv og klikk '+ Legg til'.
             </p>
@@ -602,7 +602,7 @@ function App() {
         {currentStep === 3 && analysisRan && (
           <section className="rounded-xl bg-white p-5 shadow">
             <h2 className="text-2xl font-semibold">Eksporter</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="helper-text mt-2">
               Velg hva som skal skje med all bekreftet persondata, last ned og du er i mål. Husk å lese gjennom én gang til
               – Werner er flink, men ikke ufeilbarlig. 🤓
             </p>

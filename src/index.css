@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body {
+  font-family: 'Barlow', sans-serif;
+}
+
+.helper-text {
+  font-size: 0.95rem;
+  color: #374151;
+  background: #f0f9ff;
+  border-left: 3px solid #93c5fd;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
