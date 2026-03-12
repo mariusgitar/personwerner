@@ -186,6 +186,7 @@ function downloadBlob(content, filename, mimeType) {
 }
 
 function App() {
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
   const [inputText, setInputText] = useState('')
   const [loading, setLoading] = useState(false)
   const [fileError, setFileError] = useState('')
@@ -239,6 +240,13 @@ function App() {
   const transformedResult = useMemo(() => transformText(inputText, confirmedMatches, globalAction), [inputText, confirmedMatches, globalAction])
 
   const formattedLegend = useMemo(() => formatLegend(transformedResult.legend), [transformedResult.legend])
+
+  useEffect(() => {
+    const disclaimerSeen = window.localStorage.getItem('personwerner-disclaimer-seen')
+    if (!disclaimerSeen) {
+      setShowDisclaimer(true)
+    }
+  }, [])
 
   const resetInputText = (nextValue) => {
     setInputText(nextValue)
@@ -341,6 +349,39 @@ function App() {
 
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900">
+      {showDisclaimer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
+          <section className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
+            <h2 className="text-2xl font-bold">Før du bruker PersonWerner</h2>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-slate-700">
+              <li>Dataen din sendes ikke til oss eller andre tjenester.</li>
+              <li>Alt behandles lokalt i nettleseren din, på din egen enhet.</li>
+              <li>Du har ansvar for å kvalitetssikre resultatet før du deler noe videre.</li>
+              <li>Unngå ekstra sensitive dokumenter hvis du er usikker på innholdet.</li>
+              <li>Store filer kan gjøre nettleseren treg eller ustabil.</li>
+            </ul>
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <button
+                type="button"
+                className="rounded-lg border border-slate-300 px-4 py-2 font-medium text-slate-700"
+                onClick={() => setShowDisclaimer(false)}
+              >
+                Avbryt
+              </button>
+              <button
+                type="button"
+                className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white"
+                onClick={() => {
+                  window.localStorage.setItem('personwerner-disclaimer-seen', '1')
+                  setShowDisclaimer(false)
+                }}
+              >
+                Jeg forstår – fortsett
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
         <header>
           <h1 className="text-3xl font-bold">PersonWerner</h1>
